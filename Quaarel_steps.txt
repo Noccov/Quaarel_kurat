@@ -1,0 +1,41 @@
+Framework/Field
+	score (suurenemine kiireneb)
+	level
+	health (3?)
+
+Slotid
+	Kastikesed tulevad hardcodetult
+		+ dünaamiliselt vastavalt scorele/kas on eelmisel real on kastid?
+	(Power-ups)
+	
+Quaarel
+	liikuma
+	kive viskama
+	
+Collision/position detection
+	Quaarel-vastane
+	kivi-vastane
+	Quaarel-sein
+	vastane-põrand
+	
+Boss
+	dünaamika
+		jõuab alla ja liigub x-teljel
+		laseb vastu
+		
+	
+Soundid
+	bg music
+	shoot
+	boss
+		music
+		shoot
+		die
+	get hit (Quaarel, kurat!)
+	died
+	
+	
+kellad/viled
+	power-ups
+	vastased tulistavad
+	
