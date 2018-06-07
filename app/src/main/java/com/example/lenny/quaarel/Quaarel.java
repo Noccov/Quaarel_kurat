@@ -31,10 +31,10 @@ public class Quaarel {
         rect = new RectF();
 
         length = screenX/10;
-        height = screenX/10;
+        height = screenY/10;
 
         x = screenX / 2;
-        y = screenY - 20;
+        y = screenY - height*2;
 
         bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.quaarel);
 
@@ -51,6 +51,7 @@ public class Quaarel {
     public Bitmap getBitmap() {return bitmap;}
 
     public float getX(){return x;}
+    public float getY(){return y;}
 
     public float getLength(){ return length;}
 
