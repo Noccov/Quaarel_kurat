@@ -139,14 +139,14 @@ public class QuaarelView extends SurfaceView implements Runnable{
                 rock[i].update(fps);
             }
 
-            if(!rock[i].getStatus()) {
-                if (newRock) {
-                    rock[rockCnt].init(quaarel.getX(), screenY - 10);
-                }
-            }
-            if(rock[i].getImpactPointY() < 0){
-                rock[i].setInActive();
-            }
+          if(!rock[i].getStatus()) {
+              if (newRock) {
+                  rock[rockCnt].init(quaarel.getX(), screenY - 10);
+              }
+          }
+           if(rock[i].getImpactPointY() < 0){
+               rock[i].setInActive();
+           }
         }
 
         randomNumber = generator.nextInt(7);
@@ -175,11 +175,11 @@ public class QuaarelView extends SurfaceView implements Runnable{
                 }
             }
             if(newRow) {
-                if(randomNumber != i) {
-                    if (!block[i].getStatus()) {
-                        block[i].init(i * screenX / 7, 0);
-                    }
-                }
+               if(randomNumber != i) {
+                   if (!block[i].getStatus()) {
+                       block[i].init(i * screenX / 7, 0);
+                   }
+               }
             }
 
             if (block[i].getImpactPointY() > screenY) {
