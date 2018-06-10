@@ -9,7 +9,7 @@ public class Rock {
 
     private RectF rect;
 
-    float speed = 500;
+    float speed = 600;
 
     private int width;
     private int height;
