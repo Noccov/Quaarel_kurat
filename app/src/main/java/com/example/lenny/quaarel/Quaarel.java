@@ -10,6 +10,7 @@ public class Quaarel {
     RectF rect;
 
     private Bitmap bitmap;
+    private Bitmap smallBitmap;
 
     private float length;
     private float height;
@@ -43,12 +44,19 @@ public class Quaarel {
                 (int) (height),
                 false);
 
+        smallBitmap = Bitmap.createScaledBitmap(bitmap,
+                (int) (length/2),
+                (int) (height/2),
+                false);
+
         quaarelSpeed = 350;
     }
 
     public RectF getRect() {return rect;}
 
     public Bitmap getBitmap() {return bitmap;}
+
+    public Bitmap getSmallBitmap() {return smallBitmap;}
 
     public float getX(){return x;}
     public float getY(){return y;}

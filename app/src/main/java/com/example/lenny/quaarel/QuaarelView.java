@@ -43,12 +43,13 @@ public class QuaarelView extends SurfaceView implements Runnable{
 
     private Quaarel quaarel;
 
-    private Block[] block = new Block[10];
+    private Block[] block = new Block[25];
 
-    private Rock[] rock = new Rock[20];
+    private Rock[] rock = new Rock[50];
 
     private int lives = 3;
-    private int blockCnt = 0;
+    private int score = 0;
+    private int RowCnt = 0;
     private int rockCnt = 0;
     private int second = 0;
     private int cnt = 0;
@@ -71,7 +72,7 @@ public class QuaarelView extends SurfaceView implements Runnable{
         quaarel = new Quaarel(context, screenX, screenY);
 
         for(int i = 0; i < block.length; i++) {
-            block[i] = new Block(screenX, screenY);
+            block[i] = new Block(context, screenX, screenY);
         }
 
         for(int i = 0; i < rock.length; i++){
@@ -108,6 +109,8 @@ public class QuaarelView extends SurfaceView implements Runnable{
 
         quaarel.update(fps);
 
+        score++;
+
 
         if (cnt >= fps){
             second++;
@@ -116,15 +119,20 @@ public class QuaarelView extends SurfaceView implements Runnable{
             cnt++;
         }
 
-        if(second % 3 == 0 && cnt == 0){
+        if(second % 2 == 0 && cnt == 0){
             newRow = true;
+            if(RowCnt < 2){
+                RowCnt++;
+            }else{
+                RowCnt = 0;
+            }
         }else{
             newRow = false;
         }
 
-        if(cnt == 0){
+        if(score % 30 == 0){
             newRock = true;
-            if(rockCnt < 15){
+            if(rockCnt < 49){
                 rockCnt++;
             }else{
                 rockCnt = 0;
@@ -141,7 +149,7 @@ public class QuaarelView extends SurfaceView implements Runnable{
 
           if(!rock[i].getStatus()) {
               if (newRock) {
-                  rock[rockCnt].init(quaarel.getX(), screenY - 10);
+                  rock[rockCnt].init(quaarel.getX(), Math.round(quaarel.getY()));
               }
           }
            if(rock[i].getImpactPointY() < 0){
@@ -150,6 +158,16 @@ public class QuaarelView extends SurfaceView implements Runnable{
         }
 
         randomNumber = generator.nextInt(7);
+
+        for(int i = 0; i < 7; i++){
+            if(newRow) {
+                if(randomNumber != i) {
+                    if (!block[(RowCnt*7) + i].getStatus()) {
+                        block[(RowCnt*7) + i].init(i * screenX / 7, 0);
+                    }
+                }
+            }
+        }
 
         for(int i = 0; i < block.length; i++) {
             if (block[i].getStatus()) {
@@ -164,22 +182,16 @@ public class QuaarelView extends SurfaceView implements Runnable{
                     if (lives == 0) {
                         paused = true;
                         lives = 3;
+                        score = 0;
                         prepareLevel();
                     }
                 }
                 for(int j = 0; j < rock.length; j++){
                     if(rock[j].getStatus() && RectF.intersects(block[i].getRect(), rock[j].getRect())){
-                        block[i].setInActive();
+                        block[i].gotHit(context);
                         rock[j].setInActive();
                     }
                 }
-            }
-            if(newRow) {
-               if(randomNumber != i) {
-                   if (!block[i].getStatus()) {
-                       block[i].init(i * screenX / 7, 0);
-                   }
-               }
             }
 
             if (block[i].getImpactPointY() > screenY) {
@@ -202,7 +214,7 @@ public class QuaarelView extends SurfaceView implements Runnable{
 
             for(int i = 0; i < block.length; i++) {
                 if (block[i].getStatus()) {
-                    canvas.drawRect(block[i].getRect(), paint);
+                    canvas.drawBitmap(block[i].getBitmap(), block[i].getX(), block[i].getY(), paint);
                 }
             }
 
@@ -212,7 +224,13 @@ public class QuaarelView extends SurfaceView implements Runnable{
                 }
             }
 
-            canvas.drawText("Lives: " + lives,10,50,paint);
+            for(int i = 0; i < lives; i++){
+                canvas.drawBitmap(quaarel.getSmallBitmap(), screenX - ((i+1) * quaarel.getLength()/2) - (i*10) - 10, quaarel.getLength() + 2, paint);
+            }
+
+
+            paint.setTextSize(28);
+            canvas.drawText("Score: " + score,10,50,paint);
 
             ourHolder.unlockCanvasAndPost(canvas);
         }
