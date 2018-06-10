@@ -49,6 +49,8 @@ public class QuaarelView extends SurfaceView implements Runnable{
 
     private Rock[] rock = new Rock[50];
 
+    private Book book;
+
     private int lives = 3;
     private int score = 0;
     private int RowCnt = 0;
@@ -76,6 +78,8 @@ public class QuaarelView extends SurfaceView implements Runnable{
         quaarel = new Quaarel(context, screenX, screenY);
 
         boss = new Boss(context, screenX, screenY);
+
+        book = new Book(context, screenX);
 
         for(int i = 0; i < block.length; i++) {
             block[i] = new Block(context, screenX, screenY);
@@ -136,10 +140,31 @@ public class QuaarelView extends SurfaceView implements Runnable{
 
         if(score == 250){
             bossFight = true;
+            boss.setActive();
         }
 
         if(bossFight){
             boss.update(context, fps, screenX);
+            if(boss.getHealth() < 1){
+                bossFight = false;
+                boss.setInActive();
+            }
+            if(!book.getStatus() && score > 350){
+                book.init(boss.getX(), boss.getY());
+            }
+        }
+
+
+        if(book.getStatus()){
+            book.update(fps);
+            if(RectF.intersects(book.getRect(), quaarel.getRect())){
+                lives--;
+                book.setInActive();
+            }
+        }
+
+        if(book.getImpactPointY() > screenY){
+            book.setInActive();
         }
 
 
@@ -148,11 +173,11 @@ public class QuaarelView extends SurfaceView implements Runnable{
                 rock[i].update(fps);
                 for(int j = 0; j < block.length; j++){
                     if(block[j].getStatus() && RectF.intersects(block[j].getRect(), rock[i].getRect())){
-                        block[j].gotHit(context);
+                        block[j].gotHit();
                         rock[i].setInActive();
                     }
                 }
-                if(RectF.intersects(rock[i].getRect(), boss.getRect())){
+                if(boss.getStatus() && RectF.intersects(rock[i].getRect(), boss.getRect())){
                     boss.gotHit(context);
                     rock[i].setInActive();
                 }
@@ -221,7 +246,13 @@ public class QuaarelView extends SurfaceView implements Runnable{
 
             canvas.drawBitmap(quaarel.getBitmap(), quaarel.getX(), quaarel.getY(), paint);
 
-            canvas.drawBitmap(boss.getBitmap(), boss.getX(), boss.getY(), paint);
+            if(boss.getStatus()) {
+                canvas.drawBitmap(boss.getBitmap(), boss.getX(), boss.getY(), paint);
+            }
+
+            if(book.getStatus()) {
+                canvas.drawBitmap(book.getBitmap(), book.getX(), book.getY(), paint);
+            }
 
             for(int i = 0; i < block.length; i++) {
                 if (block[i].getStatus()) {

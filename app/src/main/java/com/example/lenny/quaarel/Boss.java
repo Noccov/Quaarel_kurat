@@ -20,7 +20,7 @@ public class Boss {
     private int width;
     private int height;
 
-    private int health = 50;
+    private int health = 20;
 
     private boolean isActive;
 
@@ -103,9 +103,6 @@ public class Boss {
             health--;
             isHit = true;
             cnt = 0;
-            if(health < 1){
-                setInActive();
-            }
     }
 
     public float getX(){return x;}
@@ -116,9 +113,13 @@ public class Boss {
     public boolean getStatus(){return isActive;}
 
     public void setInActive(){isActive = false;}
+    public void setActive(){isActive = true;}
+
     public Bitmap getBitmap() {return bitmap;}
 
     public void setMovementState(int state){bossMoving = state;}
+
+    public int getHealth(){return health;}
 
     public float getImpactPointY(){
         return y + height;
