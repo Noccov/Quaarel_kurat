@@ -5,8 +5,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.RectF;
+import java.util.Random;
 
-public class Quaarel {
+public class PowerupHealth {
 
     RectF rect;
 
@@ -19,24 +20,25 @@ public class Quaarel {
     private float x;
     private float y;
 
-    private float quaarelSpeed;
+    Random generator = new Random();
+    private float randomNumber;
 
-    public final int STOPPED = 0;
-    public final int LEFT = 1;
-    public final int RIGHT = 2;
+    private int speed = 300 ;
 
-    private int quaarelMoving = STOPPED;
+    private boolean isActive;
 
 
-    public Quaarel(Context context, int screenX, int screenY) {
+
+    public PowerupHealth(Context context, int screenX) {
 
         rect = new RectF();
 
-        length = screenX / 10;
+        length = screenX / 15;
         height = length;
 
-        x = screenX / 2 - (length/2);
-        y = screenY - height * 2;
+        randomNumber = generator.nextInt(screenX - Math.round(length));
+
+        x = randomNumber;
 
         bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.quaarel);
 
@@ -45,12 +47,14 @@ public class Quaarel {
                 (int) (height),
                 false);
         bitmap = makeTransparent(bitmap);
-        smallBitmap = Bitmap.createScaledBitmap(bitmap,
-                (int) (length / 2),
-                (int) (height / 2),
-                false);
 
-        quaarelSpeed = 350;
+    }
+    public boolean init(){
+        if(!isActive){
+            isActive = true;
+            return true;
+        }
+        return false;
     }
 
     public RectF getRect() {
@@ -61,9 +65,6 @@ public class Quaarel {
         return bitmap;
     }
 
-    public Bitmap getSmallBitmap() {
-        return smallBitmap;
-    }
 
     public float getX() {
         return x;
@@ -77,28 +78,19 @@ public class Quaarel {
         x = newX;
     }
 
-    public float getLength() {
-        return length;
-    }
-
-    public void setMovementState(int state) {
-        quaarelMoving = state;
-    }
 
     public void update(long fps) {
-        if (quaarelMoving == LEFT) {
-            x = x - quaarelSpeed / fps;
-        }
-
-        if (quaarelMoving == RIGHT) {
-            x = x + quaarelSpeed / fps;
-        }
+        y = y + speed / fps;
 
         rect.top = y;
         rect.bottom = y + height;
         rect.left = x;
         rect.right = x + length;
     }
+
+    public void setInactive(){isActive = false;}
+
+    public boolean getStatus(){return isActive;}
 
     // Convert transparentColor to be transparent in a Bitmap.
     public static Bitmap makeTransparent(Bitmap bit) {

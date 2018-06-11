@@ -117,7 +117,7 @@ public class Block {
         myBitmap.setPixels(allpixels, 0, width, 0, 0, width, height);
 
         for (int i = 0; i < myBitmap.getHeight() * myBitmap.getWidth(); i++) {
-            if (allpixels[i] == android.graphics.Color.GREEN)
+            if (allpixels[i] == android.graphics.Color.BLACK)
 
                 allpixels[i] = Color.alpha(Color.TRANSPARENT);
         }
