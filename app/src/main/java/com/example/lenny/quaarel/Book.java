@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.RectF;
 import android.content.Context;
+import android.graphics.Color;
 
 public class Book {
 
@@ -56,6 +57,11 @@ public class Book {
                 width,
                 height,
                 false);
+
+        bitmap_1 = makeTransparent(bitmap_1);
+        bitmap_2 = makeTransparent(bitmap_2);
+        bitmap_3 = makeTransparent(bitmap_3);
+        bitmap_4 = makeTransparent(bitmap_4);
     }
 
 
@@ -103,4 +109,24 @@ public class Book {
 
     public float getX(){return x;}
     public float getY(){return y;}
+
+
+    // Convert transparentColor to be transparent in a Bitmap.
+    public static Bitmap makeTransparent(Bitmap bit) {
+        int width =  bit.getWidth();
+        int height = bit.getHeight();
+        Bitmap myBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        int [] allpixels = new int [ myBitmap.getHeight()*myBitmap.getWidth()];
+        bit.getPixels(allpixels, 0, myBitmap.getWidth(), 0, 0, myBitmap.getWidth(),myBitmap.getHeight());
+        myBitmap.setPixels(allpixels, 0, width, 0, 0, width, height);
+
+        for(int i =0; i<myBitmap.getHeight()*myBitmap.getWidth();i++){
+            if( allpixels[i] == android.graphics.Color.GREEN)
+
+                allpixels[i] = Color.alpha(Color.TRANSPARENT);
+        }
+
+        myBitmap.setPixels(allpixels, 0, myBitmap.getWidth(), 0, 0, myBitmap.getWidth(), myBitmap.getHeight());
+        return myBitmap;
+    }
 }

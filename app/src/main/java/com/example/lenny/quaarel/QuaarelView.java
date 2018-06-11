@@ -58,6 +58,8 @@ public class QuaarelView extends SurfaceView implements Runnable{
     private int second = 0;
     private int cnt = 0;
 
+    private float moveX;
+
     private boolean bossFight = false;
 
     public QuaarelView(Context context, int x, int y){
@@ -178,7 +180,7 @@ public class QuaarelView extends SurfaceView implements Runnable{
                     }
                 }
                 if(boss.getStatus() && RectF.intersects(rock[i].getRect(), boss.getRect())){
-                    boss.gotHit(context);
+                    boss.gotHit();
                     rock[i].setInActive();
                 }
             }
@@ -274,6 +276,7 @@ public class QuaarelView extends SurfaceView implements Runnable{
             paint.setTextSize(28);
             canvas.drawText("Score: " + score,10,50,paint);
 
+
             ourHolder.unlockCanvasAndPost(canvas);
         }
     }
@@ -302,18 +305,28 @@ public class QuaarelView extends SurfaceView implements Runnable{
 
                 paused = false;
 
-                if(motionEvent.getX() > screenX / 2){
-                    quaarel.setMovementState(quaarel.RIGHT);
-                } else{
-                    quaarel.setMovementState(quaarel.LEFT);
-                }
+                moveX = motionEvent.getX();
+
+               // if(motionEvent.getX() > screenX / 2){
+               //     quaarel.setMovementState(quaarel.RIGHT);
+               // } else{
+               //     quaarel.setMovementState(quaarel.LEFT);
+               // }
 
 
                 break;
 
+            case MotionEvent.ACTION_MOVE:
+
+                quaarel.setX(quaarel.getX() + motionEvent.getX() - moveX);
+                moveX = motionEvent.getX();
+
+                break;
+
+
             case MotionEvent.ACTION_UP:
 
-                quaarel.setMovementState(quaarel.STOPPED);
+               // quaarel.setMovementState(quaarel.STOPPED);
 
                 break;
 

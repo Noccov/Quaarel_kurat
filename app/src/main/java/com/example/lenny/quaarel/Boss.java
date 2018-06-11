@@ -2,6 +2,7 @@ package com.example.lenny.quaarel;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.RectF;
 import android.content.Context;
 
@@ -13,7 +14,8 @@ public class Boss {
 
     private RectF rect;
 
-    private Bitmap bitmap;
+    private Bitmap bitmap_1;
+    private Bitmap bitmap_2;
 
     float speed = 200;
 
@@ -42,12 +44,21 @@ public class Boss {
 
         rect = new RectF();
 
-        bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.liina_1);
+        bitmap_1 = BitmapFactory.decodeResource(context.getResources(), R.drawable.liina_1);
 
-        bitmap = Bitmap.createScaledBitmap(bitmap,
+        bitmap_1 = Bitmap.createScaledBitmap(bitmap_1,
                 width,
                 height,
                 false);
+
+        bitmap_2 = BitmapFactory.decodeResource(context.getResources(), R.drawable.liina_2);
+        bitmap_2 = Bitmap.createScaledBitmap(bitmap_2,
+                width,
+                height,
+                false);
+
+        bitmap_1 = makeTransparent(bitmap_1);
+        bitmap_2 = makeTransparent(bitmap_2);
     }
 
     public boolean init(float startX, float startY){
@@ -76,12 +87,6 @@ public class Boss {
         if(isHit) {
             cnt++;
             if (cnt > fps){
-                bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.liina_1);
-                bitmap = Bitmap.createScaledBitmap(bitmap,
-                        width,
-                        height,
-                        false);
-                health--;
                 isHit = false;
                 cnt = 0;
             }
@@ -94,12 +99,7 @@ public class Boss {
         }
     }
 
-    public void gotHit(Context context){
-            bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.liina_2);
-            bitmap = Bitmap.createScaledBitmap(bitmap,
-                    width,
-                    height,
-                    false);
+    public void gotHit(){
             health--;
             isHit = true;
             cnt = 0;
@@ -115,7 +115,13 @@ public class Boss {
     public void setInActive(){isActive = false;}
     public void setActive(){isActive = true;}
 
-    public Bitmap getBitmap() {return bitmap;}
+    public Bitmap getBitmap() {
+        if(isHit){
+            return bitmap_2;
+        }else {
+            return bitmap_1;
+        }
+    }
 
     public void setMovementState(int state){bossMoving = state;}
 
@@ -123,5 +129,24 @@ public class Boss {
 
     public float getImpactPointY(){
         return y + height;
+    }
+
+    // Convert transparentColor to be transparent in a Bitmap.
+    public static Bitmap makeTransparent(Bitmap bit) {
+        int width = bit.getWidth();
+        int height = bit.getHeight();
+        Bitmap myBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        int[] allpixels = new int[myBitmap.getHeight() * myBitmap.getWidth()];
+        bit.getPixels(allpixels, 0, myBitmap.getWidth(), 0, 0, myBitmap.getWidth(), myBitmap.getHeight());
+        myBitmap.setPixels(allpixels, 0, width, 0, 0, width, height);
+
+        for (int i = 0; i < myBitmap.getHeight() * myBitmap.getWidth(); i++) {
+            if (allpixels[i] == android.graphics.Color.GREEN)
+
+                allpixels[i] = Color.alpha(Color.TRANSPARENT);
+        }
+
+        myBitmap.setPixels(allpixels, 0, myBitmap.getWidth(), 0, 0, myBitmap.getWidth(), myBitmap.getHeight());
+        return myBitmap;
     }
 }
