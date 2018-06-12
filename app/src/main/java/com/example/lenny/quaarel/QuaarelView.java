@@ -51,6 +51,7 @@ public class QuaarelView extends SurfaceView implements Runnable{
     private PowerupSpeed powerupSpeed;
 
     private int speedEnd;
+    private int bossTime = 250;
 
     private SoundManager soundManager;
 
@@ -192,9 +193,9 @@ public class QuaarelView extends SurfaceView implements Runnable{
             }
         }
 
-        if(score == 250){
+        if(score == bossTime){
             bossFight = true;
-            boss.setActive();
+            boss.init(screenX);
             soundManager.playMusic();
         }
 
@@ -289,7 +290,7 @@ public class QuaarelView extends SurfaceView implements Runnable{
 
             if(!rock[i].getStatus()) {
                 if (newRock) {
-                    rock[rockCnt].init(quaarel.getX(), Math.round(quaarel.getY()));
+                    rock[rockCnt].init(quaarel.getX() + (quaarel.getLength()/2), Math.round(quaarel.getY()));
                 }
             }
             if(rock[i].getImpactPointY() < 0){
@@ -303,6 +304,7 @@ public class QuaarelView extends SurfaceView implements Runnable{
             boss.update(context, fps, screenX);
             if(boss.getHealth() < 1){
                 bossFight = false;
+                bossTime = score + 250;
                 boss.setInActive();
                 soundManager.stopMusic();
             }

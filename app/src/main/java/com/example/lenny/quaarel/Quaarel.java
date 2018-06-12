@@ -49,15 +49,16 @@ public class Quaarel {
                 (int) (height),
                 false);
 
-        bitmap_1 = makeTransparent(bitmap_1);
-        bitmap_2 = makeTransparent(bitmap_2);
-
-
         smallBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.quaarel);
         smallBitmap = Bitmap.createScaledBitmap(smallBitmap,
                 (int) (length / 2),
                 (int) (height),
                 false);
+
+
+        bitmap_1 = makeTransparent(bitmap_1);
+        bitmap_2 = makeTransparent(bitmap_2);
+        smallBitmap = makeTransparent(smallBitmap);
 
         quaarelSpeed = 350;
     }

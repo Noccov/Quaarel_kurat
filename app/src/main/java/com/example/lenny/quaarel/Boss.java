@@ -61,10 +61,14 @@ public class Boss {
         bitmap_2 = makeTransparent(bitmap_2);
     }
 
-    public boolean init(float startX, float startY){
+    public boolean init(int screenX){
         if(!isActive){
-            x = startX;
-            y = startY;
+            isHit = false;
+            bossMoving = 0;
+            cnt = 0;
+            health = 20;
+            x = screenX / 2 - (width/2);
+            y = -height;
             isActive = true;
             return true;
         }
@@ -113,7 +117,6 @@ public class Boss {
     public boolean getStatus(){return isActive;}
 
     public void setInActive(){isActive = false;}
-    public void setActive(){isActive = true;}
 
     public Bitmap getBitmap() {
         if(isHit){
