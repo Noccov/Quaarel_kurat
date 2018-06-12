@@ -48,6 +48,9 @@ public class QuaarelView extends SurfaceView implements Runnable{
     private Book book;
 
     private PowerupHealth powerupHealth;
+    private PowerupSpeed powerupSpeed;
+
+    private int speedEnd;
 
     private SoundManager soundManager;
 
@@ -86,7 +89,7 @@ public class QuaarelView extends SurfaceView implements Runnable{
     private void prepareLevel(){
 
         bossFight = false;
-        lives = 1;
+        lives = 2;
         score = 0;
         newRow = false;
         newRock = false;
@@ -101,6 +104,8 @@ public class QuaarelView extends SurfaceView implements Runnable{
         book = new Book(context, screenX);
 
         powerupHealth = new PowerupHealth(context, screenX);
+
+        powerupSpeed = new PowerupSpeed(context, screenX);
 
         for(int i = 0; i < block.length; i++) {
             block[i] = new Block(context, screenX, screenY);
@@ -149,6 +154,7 @@ public class QuaarelView extends SurfaceView implements Runnable{
             cnt = 0;
         }else {cnt++;}
 
+
         if(second % 2 == 0 && cnt == 0){
             newRow = true;
             if(RowCnt < 2){
@@ -156,12 +162,35 @@ public class QuaarelView extends SurfaceView implements Runnable{
             }else{RowCnt = 0;}
         }else{newRow = false;}
 
-        if(score % 20 == 0 && score < 10){
-            newRock = true;
-            if(rockCnt < 49){
-                rockCnt++;
-            }else{rockCnt = 0;}
-        }else{newRock = false;}
+        if(score < speedEnd){
+            if (score % 10 == 0 && score > 10) {
+                newRock = true;
+                if (rockCnt < 49) {
+                    rockCnt++;
+                } else {
+                    rockCnt = 0;
+                }
+            } else {
+                newRock = false;
+            }
+            if (score % 5 == 0){
+                quaarel.swichPos();
+            }
+        }else {
+            if (score % 20 == 0 && score > 10) {
+                newRock = true;
+                if (rockCnt < 49) {
+                    rockCnt++;
+                } else {
+                    rockCnt = 0;
+                }
+            } else {
+                newRock = false;
+            }
+            if(score % 10 == 0){
+                quaarel.swichPos();
+            }
+        }
 
         if(score == 250){
             bossFight = true;
@@ -170,7 +199,12 @@ public class QuaarelView extends SurfaceView implements Runnable{
         }
 
         if(score % 500 == 0 && score > 10){
-            powerupHealth.init();
+            randomNumber = generator.nextInt(5);
+            if(randomNumber > 2) {
+                powerupHealth.init();
+            }else{
+                powerupSpeed.init();
+            }
         }
 
 
@@ -182,6 +216,17 @@ public class QuaarelView extends SurfaceView implements Runnable{
             }
             if(powerupHealth.getImpactPointY() > screenY){
                 powerupHealth.setInactive();
+            }
+        }
+
+        if(powerupSpeed.getStatus()){
+            powerupSpeed.update(fps);
+            if(RectF.intersects(powerupSpeed.getRect(), quaarel.getRect())){
+                speedEnd = score + 500;
+                powerupSpeed.setInactive();
+            }
+            if(powerupSpeed.getImpactPointY() > screenY){
+                powerupSpeed.setInactive();
             }
         }
 
@@ -300,6 +345,10 @@ public class QuaarelView extends SurfaceView implements Runnable{
 
             if(powerupHealth.getStatus()) {
                 canvas.drawBitmap(powerupHealth.getBitmap(), powerupHealth.getX(), powerupHealth.getY(), paint);
+            }
+
+            if(powerupSpeed.getStatus()) {
+                canvas.drawBitmap(powerupSpeed.getBitmap(), powerupSpeed.getX(), powerupSpeed.getY(), paint);
             }
 
             for(int i = 0; i < block.length; i++) {
