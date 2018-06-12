@@ -156,7 +156,7 @@ public class QuaarelView extends SurfaceView implements Runnable{
             }else{RowCnt = 0;}
         }else{newRow = false;}
 
-        if(score % 20 == 0){
+        if(score % 20 == 0 && score < 10){
             newRock = true;
             if(rockCnt < 49){
                 rockCnt++;
@@ -169,20 +169,10 @@ public class QuaarelView extends SurfaceView implements Runnable{
             soundManager.playMusic();
         }
 
-        if(score == 100){
+        if(score % 500 == 0 && score > 10){
             powerupHealth.init();
         }
 
-        if(bossFight){
-            boss.update(context, fps, screenX);
-            if(boss.getHealth() < 1){
-                bossFight = false;
-                boss.setInActive();
-            }
-            if(!book.getStatus() && score > 350){
-                book.init(boss.getX(), boss.getY());
-            }
-        }
 
         if(powerupHealth.getStatus()){
             powerupHealth.update(fps);
@@ -190,21 +180,53 @@ public class QuaarelView extends SurfaceView implements Runnable{
                 lives++;
                 powerupHealth.setInactive();
             }
-        }
-
-        if(book.getStatus()){
-            book.update(fps);
-            if(RectF.intersects(book.getRect(), quaarel.getRect())){
-                lives--;
-                book.setInActive();
+            if(powerupHealth.getImpactPointY() > screenY){
+                powerupHealth.setInactive();
             }
         }
 
-        if(book.getImpactPointY() > screenY){
-            book.setInActive();
+
+        updateBlocks();
+        updateRocks();
+        updateBossFight();
+
+    }
+
+    private void updateBlocks(){
+        for(int i = 0; i < block.length; i++) {
+            if (block[i].getStatus()) {
+                block[i].update(fps);
+            }
+
+            if (block[i].getStatus()) {
+                if (RectF.intersects(quaarel.getRect(), block[i].getRect())) {
+                    lives--;
+                    block[i].setInActive();
+                    //prepareLevel();
+                }
+            }
+
+            if (block[i].getImpactPointY() > screenY) {
+                block[i].setInActive();
+            }
         }
 
+        if(!bossFight) {
+            randomNumber = generator.nextInt(7);
 
+            for (int i = 0; i < 7; i++) {
+                if (newRow) {
+                    if (randomNumber != i) {
+                        if (!block[(RowCnt * 7) + i].getStatus()) {
+                            block[(RowCnt * 7) + i].init(i * screenX / 7, 0);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private void updateRocks(){
         for(int i = 0; i < rock.length; i++) {
             if (rock[i].getStatus()){
                 rock[i].update(fps);
@@ -220,50 +242,41 @@ public class QuaarelView extends SurfaceView implements Runnable{
                 }
             }
 
-          if(!rock[i].getStatus()) {
-              if (newRock) {
-                  rock[rockCnt].init(quaarel.getX(), Math.round(quaarel.getY()));
-              }
-          }
-           if(rock[i].getImpactPointY() < 0){
-               rock[i].setInActive();
-           }
-        }
-
-
-        if(!bossFight) {
-            randomNumber = generator.nextInt(7);
-
-            for (int i = 0; i < 7; i++) {
-                if (newRow) {
-                    if (randomNumber != i) {
-                        if (!block[(RowCnt * 7) + i].getStatus()) {
-                            block[(RowCnt * 7) + i].init(i * screenX / 7, 0);
-                        }
-                    }
+            if(!rock[i].getStatus()) {
+                if (newRock) {
+                    rock[rockCnt].init(quaarel.getX(), Math.round(quaarel.getY()));
                 }
             }
-        }
-
-        for(int i = 0; i < block.length; i++) {
-            if (block[i].getStatus()) {
-                block[i].update(fps);
-            }
-
-
-            if (block[i].getStatus()) {
-                if (RectF.intersects(quaarel.getRect(), block[i].getRect())) {
-                    lives--;
-                    block[i].setInActive();
-                    //prepareLevel();
-                }
-            }
-
-            if (block[i].getImpactPointY() > screenY) {
-                block[i].setInActive();
+            if(rock[i].getImpactPointY() < 0){
+                rock[i].setInActive();
             }
         }
+    }
 
+    private void updateBossFight(){
+        if(bossFight){
+            boss.update(context, fps, screenX);
+            if(boss.getHealth() < 1){
+                bossFight = false;
+                boss.setInActive();
+                soundManager.stopMusic();
+            }
+            if(!book.getStatus() && score > 350){
+                book.init(boss.getX(), boss.getY());
+            }
+        }
+
+        if(book.getStatus()){
+            book.update(fps);
+            if(RectF.intersects(book.getRect(), quaarel.getRect())){
+                lives--;
+                book.setInActive();
+            }
+        }
+
+        if(book.getImpactPointY() > screenY){
+            book.setInActive();
+        }
     }
 
     private void draw(){

@@ -36,9 +36,6 @@ public class PowerupHealth {
         length = screenX / 15;
         height = length;
 
-        randomNumber = generator.nextInt(screenX - Math.round(length));
-
-        x = randomNumber;
 
         bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.quaarel);
 
@@ -51,6 +48,9 @@ public class PowerupHealth {
     }
     public boolean init(){
         if(!isActive){
+            randomNumber = generator.nextInt((Math.round(length) * 15) - Math.round(length));
+            x = randomNumber;
+            y = 0;
             isActive = true;
             return true;
         }
@@ -91,6 +91,10 @@ public class PowerupHealth {
     public void setInactive(){isActive = false;}
 
     public boolean getStatus(){return isActive;}
+
+    public float getImpactPointY(){
+        return y + height;
+    }
 
     // Convert transparentColor to be transparent in a Bitmap.
     public static Bitmap makeTransparent(Bitmap bit) {
