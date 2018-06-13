@@ -9,7 +9,7 @@ import java.util.Random;
 
 public class PowerupSpeed {
 
-    RectF rect;
+    private RectF rect;
 
     private Bitmap bitmap;
     private Bitmap smallBitmap;
@@ -20,7 +20,7 @@ public class PowerupSpeed {
     private float x;
     private float y;
 
-    Random generator = new Random();
+    private Random generator = new Random();
     private float randomNumber;
 
     private int speed = 300 ;
@@ -35,7 +35,6 @@ public class PowerupSpeed {
 
         length = screenX / 10;
         height = length;
-
 
         bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.speed);
 
@@ -57,27 +56,15 @@ public class PowerupSpeed {
         return false;
     }
 
-    public RectF getRect() {
-        return rect;
-    }
+    public RectF getRect() {return rect;}
 
-    public Bitmap getBitmap() {
-        return bitmap;
-    }
+    public Bitmap getBitmap() {return bitmap;}
 
+    public float getX() {return x;}
 
-    public float getX() {
-        return x;
-    }
+    public float getY() {return y;}
 
-    public float getY() {
-        return y;
-    }
-
-    public void setX(float newX) {
-        x = newX;
-    }
-
+    public void setX(float newX) {x = newX;}
 
     public void update(long fps) {
         y = y + speed / fps;
@@ -92,9 +79,7 @@ public class PowerupSpeed {
 
     public boolean getStatus(){return isActive;}
 
-    public float getImpactPointY(){
-        return y + height;
-    }
+    public float getImpactPointY(){return y + height;}
 
     // Convert transparentColor to be transparent in a Bitmap.
     public static Bitmap makeTransparent(Bitmap bit) {

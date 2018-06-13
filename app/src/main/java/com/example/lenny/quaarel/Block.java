@@ -27,7 +27,7 @@ public class Block {
 
     private boolean isActive;
 
-    public Block(Context context, int screenX, int screenY){
+    public Block(Context context, int screenX){
 
         width = screenX / 7;
         height = width;
@@ -103,9 +103,7 @@ public class Block {
         }
     }
 
-    public float getImpactPointY(){
-        return y + height;
-    }
+    public float getImpactPointY(){return y + height;}
 
     // Convert transparentColor to be transparent in a Bitmap.
     public static Bitmap makeTransparent(Bitmap bit) {

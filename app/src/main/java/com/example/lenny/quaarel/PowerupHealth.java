@@ -12,7 +12,6 @@ public class PowerupHealth {
     RectF rect;
 
     private Bitmap bitmap;
-    private Bitmap smallBitmap;
 
     private float length;
     private float height;
@@ -20,7 +19,7 @@ public class PowerupHealth {
     private float x;
     private float y;
 
-    Random generator = new Random();
+    private Random generator = new Random();
     private float randomNumber;
 
     private int speed = 300 ;
@@ -57,26 +56,15 @@ public class PowerupHealth {
         return false;
     }
 
-    public RectF getRect() {
-        return rect;
-    }
+    public RectF getRect() {return rect;}
 
-    public Bitmap getBitmap() {
-        return bitmap;
-    }
+    public Bitmap getBitmap() {return bitmap;}
 
 
-    public float getX() {
-        return x;
-    }
+    public float getX() {return x;}
+    public float getY() {return y;}
 
-    public float getY() {
-        return y;
-    }
-
-    public void setX(float newX) {
-        x = newX;
-    }
+    public void setX(float newX) {x = newX;}
 
 
     public void update(long fps) {

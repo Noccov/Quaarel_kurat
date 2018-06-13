@@ -14,7 +14,6 @@ public class SoundManager {
     private int bossMusic;
     private int stream;
 
-    private boolean loaded = false;
 
     public SoundManager(Context context) {
 
@@ -30,7 +29,6 @@ public class SoundManager {
         ourSounds.setOnLoadCompleteListener(new OnLoadCompleteListener() {
             @Override
             public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
-                loaded = true;
             }
         });
         bossMusic = ourSounds.load(context, R.raw.bossfight, 1);

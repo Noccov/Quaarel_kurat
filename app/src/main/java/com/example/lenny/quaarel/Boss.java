@@ -26,16 +26,17 @@ public class Boss {
 
     private boolean isActive;
 
-    public final int LEFT = 1;
-    public final int RIGHT = 2;
+    private final int LEFT = 1;
+    private final int RIGHT = 2;
 
     private int bossMoving = 0;
     private boolean isHit;
     private int cnt = 0;
 
 
-    public Boss(Context context, int screenX, int screenY){
+    public Boss(Context context, int screenX){
 
+        //square with side 1/3 of screen width
         width = screenX / 3;
         height = width;
         x = screenX / 2 - (width/2);
@@ -45,7 +46,6 @@ public class Boss {
         rect = new RectF();
 
         bitmap_1 = BitmapFactory.decodeResource(context.getResources(), R.drawable.liina_1);
-
         bitmap_1 = Bitmap.createScaledBitmap(bitmap_1,
                 width,
                 height,
@@ -75,9 +75,11 @@ public class Boss {
         return false;
     }
 
-    public void update(Context context, long fps, int screenX){
+    public void update(long fps, int screenX){
+        //Moving down
         if(y < height / 2) {
             y = y + speed / fps;
+        //Moving left and right
         }else if(bossMoving == RIGHT){
             x = x + speed / fps;
         }else{
@@ -88,6 +90,7 @@ public class Boss {
         rect.top = y;
         rect.bottom = y + height;
 
+        //Hit sprite counter
         if(isHit) {
             cnt++;
             if (cnt > fps){
@@ -96,6 +99,7 @@ public class Boss {
             }
         }
 
+        //Left/Right movement change
         if(x < 0){
             bossMoving = RIGHT;
         }else if(x > screenX - width){
@@ -126,13 +130,8 @@ public class Boss {
         }
     }
 
-    public void setMovementState(int state){bossMoving = state;}
 
     public int getHealth(){return health;}
-
-    public float getImpactPointY(){
-        return y + height;
-    }
 
     // Convert transparentColor to be transparent in a Bitmap.
     public static Bitmap makeTransparent(Bitmap bit) {

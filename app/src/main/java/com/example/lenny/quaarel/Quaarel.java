@@ -8,7 +8,7 @@ import android.graphics.RectF;
 
 public class Quaarel {
 
-    RectF rect;
+    private RectF rect;
 
     private Bitmap bitmap_1;
     private Bitmap bitmap_2;
@@ -21,7 +21,6 @@ public class Quaarel {
     private float y;
 
     private float quaarelSpeed;
-
     private boolean handPos;
 
 
@@ -63,44 +62,26 @@ public class Quaarel {
         quaarelSpeed = 350;
     }
 
-    public RectF getRect() {
-        return rect;
-    }
+    public RectF getRect() {return rect;}
 
-    public void swichPos(){
-        handPos = !handPos;
-    }
+    public void swichPos(){handPos = !handPos;}
 
     public Bitmap getBitmap() {
-        if(handPos) {
-            return bitmap_1;
-        }else{
-            return bitmap_2;
-        }
+        if(handPos) {return bitmap_1;
+        }else{return bitmap_2;}
     }
 
-    public Bitmap getSmallBitmap() {
-        return smallBitmap;
-    }
+    public Bitmap getSmallBitmap() {return smallBitmap;}
 
-    public float getX() {
-        return x;
-    }
+    public float getX() {return x;}
 
-    public float getY() {
-        return y;
-    }
+    public float getY() {return y;}
 
-    public void setX(float newX) {
-        x = newX;
-    }
+    public void setX(float newX) {x = newX;}
 
-    public float getLength() {
-        return length;
-    }
+    public float getLength() {return length;}
 
-    public void update(long fps) {
-
+    public void update() {
         rect.top = y;
         rect.bottom = y + height;
         rect.left = x;

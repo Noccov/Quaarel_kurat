@@ -9,7 +9,7 @@ import android.content.Context;
 
 public class Cloud {
 
-    private float x;
+    private float x = 0;
     private float y;
 
     private RectF rect;
@@ -20,7 +20,6 @@ public class Cloud {
 
     private int width;
     private int height;
-
 
     private boolean isActive;
 
@@ -64,18 +63,12 @@ public class Cloud {
     public float getX(){return x;}
     public float getY(){return y;}
 
-    public RectF getRect(){return rect;}
-
     public boolean getStatus(){return isActive;}
 
     public void setInactive(){isActive = false;}
-    public Bitmap getBitmap() {
-            return bitmap;
-    }
+    public Bitmap getBitmap() {return bitmap;}
 
-    public float getImpactPointY(){
-        return y + height;
-    }
+    public float getImpactPointY(){return y + height;}
 
     // Convert transparentColor to be transparent in a Bitmap.
     public static Bitmap makeTransparent(Bitmap bit) {
