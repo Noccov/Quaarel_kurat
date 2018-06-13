@@ -26,18 +26,18 @@ public class SoundManager {
                 .setMaxStreams(1)
                 .setAudioAttributes(audioAttributes)
                 .build();
-        ourSounds.setOnLoadCompleteListener(new OnLoadCompleteListener() {
-            @Override
-            public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
-            }
-        });
+       // ourSounds.setOnLoadCompleteListener(new OnLoadCompleteListener() {
+       //     @Override
+       //     public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
+       //     }
+       // });
         bossMusic = ourSounds.load(context, R.raw.bossfight, 1);
 
     }
 
 
     public void playMusic() {
-         stream = ourSounds.play(bossMusic, 0.9f, 0.9f, 1, 0, 1);
+         stream = ourSounds.play(bossMusic, 0.9f, 0.9f, 1, 1, 1);
     }
 
     public void stopMusic() {

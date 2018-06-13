@@ -1,5 +1,9 @@
 package com.example.lenny.quaarel;
 
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.RectF;
 
 public class Rock {
@@ -8,6 +12,7 @@ public class Rock {
     private float y;
 
     private RectF rect;
+    private Bitmap bitmap;
 
     float speed = 600;
 
@@ -16,13 +21,21 @@ public class Rock {
 
     private boolean isActive;
 
-    public Rock(int screenX){
+    public Rock(Context context, int screenX){
 
-        width = screenX / 10;
+        width = screenX / 20;
         height = width;
         isActive = false;
 
         rect = new RectF();
+
+        bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.rock);
+        bitmap = Bitmap.createScaledBitmap(bitmap,
+                width,
+                height,
+                false);
+
+        bitmap = makeTransparent(bitmap);
     }
 
     public boolean init(float startX, int startY){
@@ -46,9 +59,32 @@ public class Rock {
 
     public RectF getRect(){return rect;}
 
+    public float getX(){return x;}
+    public float getY(){return y;}
+
+    public Bitmap getBitmap() {return bitmap;}
     public boolean getStatus(){return isActive;}
 
     public void setInActive(){isActive = false;}
 
     public float getImpactPointY(){return y + height;}
+
+    // Convert transparentColor to be transparent in a Bitmap.
+    public static Bitmap makeTransparent(Bitmap bit) {
+        int width = bit.getWidth();
+        int height = bit.getHeight();
+        Bitmap myBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        int[] allpixels = new int[myBitmap.getHeight() * myBitmap.getWidth()];
+        bit.getPixels(allpixels, 0, myBitmap.getWidth(), 0, 0, myBitmap.getWidth(), myBitmap.getHeight());
+        myBitmap.setPixels(allpixels, 0, width, 0, 0, width, height);
+
+        for (int i = 0; i < myBitmap.getHeight() * myBitmap.getWidth(); i++) {
+            if (allpixels[i] == android.graphics.Color.BLACK)
+
+                allpixels[i] = Color.alpha(Color.TRANSPARENT);
+        }
+
+        myBitmap.setPixels(allpixels, 0, myBitmap.getWidth(), 0, 0, myBitmap.getWidth(), myBitmap.getHeight());
+        return myBitmap;
+    }
 }

@@ -112,7 +112,7 @@ public class QuaarelView extends SurfaceView implements Runnable{
         }
 
         for(int i = 0; i < rock.length; i++){
-            rock[i] = new Rock(screenX);
+            rock[i] = new Rock(context, screenX);
         }
 
     }
@@ -273,7 +273,7 @@ public class QuaarelView extends SurfaceView implements Runnable{
             boss.update(fps, screenX);
             if(boss.getHealth() < 1){
                 bossFight = false;
-                bossTime = score + 250;
+                bossTime = score + 500;
                 boss.setInActive();
                 soundManager.stopMusic();
             }
@@ -353,12 +353,11 @@ public class QuaarelView extends SurfaceView implements Runnable{
             if(powerupHealth.getStatus()) {canvas.drawBitmap(powerupHealth.getBitmap(), powerupHealth.getX(), powerupHealth.getY(), paint);}
             if(powerupSpeed.getStatus()) {canvas.drawBitmap(powerupSpeed.getBitmap(), powerupSpeed.getX(), powerupSpeed.getY(), paint);}
             if(powerupCloud.getStatus()) {canvas.drawBitmap(powerupCloud.getBitmap(), powerupCloud.getX(), powerupCloud.getY(), paint);}
-            if(cloud.getStatus()) {canvas.drawBitmap(cloud.getBitmap(), cloud.getX(), cloud.getY(), paint);}
             for(int i = 0; i < block.length; i++) {
                 if (block[i].getStatus()) {canvas.drawBitmap(block[i].getBitmap(), block[i].getX(), block[i].getY(), paint);}
             }
             for(int i = 0; i  < rock.length; i++){
-                if (rock[i].getStatus()) {canvas.drawRect(rock[i].getRect(), paint);}
+                if (rock[i].getStatus()) {canvas.drawBitmap(rock[i].getBitmap(), rock[i].getX(), rock[i].getY(), paint);}
             }
             //Lives on top right corner
             for(int i = 0; i < lives; i++){
@@ -368,6 +367,9 @@ public class QuaarelView extends SurfaceView implements Runnable{
             //Score text
             paint.setTextSize(28);
             canvas.drawText("Score: " + score,10,50,paint);
+
+            //Cloud is drawn last so it will be on top of everything else
+            if(cloud.getStatus()) {canvas.drawBitmap(cloud.getBitmap(), cloud.getX(), cloud.getY(), paint);}
 
             ourHolder.unlockCanvasAndPost(canvas);
         }
@@ -399,7 +401,9 @@ public class QuaarelView extends SurfaceView implements Runnable{
                 break;
 
             case MotionEvent.ACTION_MOVE:
-                quaarel.setX(quaarel.getX() + motionEvent.getX() - moveX);
+                if((quaarel.getX() > 0 && moveX > motionEvent.getX()) || (quaarel.getX() < screenX - quaarel.getLength() && moveX < motionEvent.getX()) ){
+                    quaarel.setX(quaarel.getX() + motionEvent.getX() - moveX);
+                }
                 moveX = motionEvent.getX();
                 break;
 
