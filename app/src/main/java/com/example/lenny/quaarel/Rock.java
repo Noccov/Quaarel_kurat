@@ -14,10 +14,11 @@ public class Rock {
     private RectF rect;
     private Bitmap bitmap;
 
+
     float speed = 600;
 
-    private int width;
-    private int height;
+    private float width;
+    private float height;
 
     private boolean isActive;
 
@@ -31,8 +32,8 @@ public class Rock {
 
         bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.rock);
         bitmap = Bitmap.createScaledBitmap(bitmap,
-                width,
-                height,
+                (int) width,
+                (int) height,
                 false);
 
         bitmap = makeTransparent(bitmap);
@@ -68,6 +69,21 @@ public class Rock {
     public void setInActive(){isActive = false;}
 
     public float getImpactPointY(){return y + height;}
+
+    public void setSize(float newSize){
+        height = height * newSize;
+        width = width * newSize;
+        updateBitmap();
+    }
+
+    public void updateBitmap(){
+        bitmap = Bitmap.createScaledBitmap(bitmap,
+                (int) width,
+                (int) height,
+                false);
+
+        bitmap = makeTransparent(bitmap);
+    }
 
     // Convert transparentColor to be transparent in a Bitmap.
     public static Bitmap makeTransparent(Bitmap bit) {

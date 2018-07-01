@@ -22,6 +22,8 @@ public class QuaarelActivity extends Activity {
 
         quaarelView = new QuaarelView(this, size.x, size.y);
         setContentView(quaarelView);
+
+
     }
 
     @Override

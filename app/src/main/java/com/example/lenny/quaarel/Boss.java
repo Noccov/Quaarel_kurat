@@ -107,8 +107,8 @@ public class Boss {
         }
     }
 
-    public void gotHit(){
-            health--;
+    public void gotHit(int strength){
+            health = health - strength;
             isHit = true;
             cnt = 0;
     }

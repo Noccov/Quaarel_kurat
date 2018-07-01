@@ -5,14 +5,13 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.RectF;
+import java.util.Random;
 
-public class Quaarel {
+public class PowerupSizeBig {
 
     private RectF rect;
 
     private Bitmap bitmap;
-    //private Bitmap bitmap_2;
-    private Bitmap smallBitmap;
 
     private float length;
     private float height;
@@ -20,59 +19,45 @@ public class Quaarel {
     private float x;
     private float y;
 
-    private float quaarelSpeed;
-    //private boolean handPos;
+    private Random generator = new Random();
+    private float randomNumber;
+
+    private int speed = 300 ;
+
+    private boolean isActive;
 
 
-    public Quaarel(Context context, int screenX, int screenY) {
+
+    public PowerupSizeBig(Context context, int screenX) {
 
         rect = new RectF();
 
-        length = screenX / 8;
+        length = screenX / 5;
         height = length;
 
-        x = screenX / 2 - (length/2);
-        y = screenY - (screenX / 5);
-
-        bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.quaarel);
+        bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.rock);
 
         bitmap = Bitmap.createScaledBitmap(bitmap,
                 (int) (length),
                 (int) (height),
                 false);
-
-        //bitmap_2 = BitmapFactory.decodeResource(context.getResources(), R.drawable.quaarel_2);
-//
-        //bitmap_2 = Bitmap.createScaledBitmap(bitmap_2,
-        //        (int) (length),
-        //        (int) (height),
-        //        false);
-
-        smallBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.quaarel);
-        smallBitmap = Bitmap.createScaledBitmap(smallBitmap,
-                (int) (length / 2),
-                (int) (height / 2),
-                false);
-
-
         bitmap = makeTransparent(bitmap);
-        //bitmap_2 = makeTransparent(bitmap_2);
-        smallBitmap = makeTransparent(smallBitmap);
 
-        quaarelSpeed = 350;
+    }
+    public boolean init(){
+        if(!isActive){
+            randomNumber = generator.nextInt((Math.round(length) * 10) - Math.round(length));
+            x = randomNumber;
+            y = 0;
+            isActive = true;
+            return true;
+        }
+        return false;
     }
 
     public RectF getRect() {return rect;}
 
-   // public void swichPos(){handPos = !handPos;}
-
-    public Bitmap getBitmap() {
-   //     if(handPos) {return bitmap_1;
-  //      }else{return bitmap_2;}
-        return bitmap;
-    }
-
-    public Bitmap getSmallBitmap() {return smallBitmap;}
+    public Bitmap getBitmap() {return bitmap;}
 
     public float getX() {return x;}
 
@@ -80,14 +65,20 @@ public class Quaarel {
 
     public void setX(float newX) {x = newX;}
 
-    public float getLength() {return length;}
+    public void update(long fps) {
+        y = y + speed / fps;
 
-    public void update() {
         rect.top = y;
         rect.bottom = y + height;
         rect.left = x;
         rect.right = x + length;
     }
+
+    public void setInactive(){isActive = false;}
+
+    public boolean getStatus(){return isActive;}
+
+    public float getImpactPointY(){return y + height;}
 
     // Convert transparentColor to be transparent in a Bitmap.
     public static Bitmap makeTransparent(Bitmap bit) {

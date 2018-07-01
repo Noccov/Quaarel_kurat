@@ -23,7 +23,7 @@ public class Block {
     private int width;
     private int height;
 
-    private int health = 2;
+    private int health = 3;
 
     private boolean isActive;
 
@@ -61,7 +61,7 @@ public class Block {
         if(!isActive){
             x = startX;
             y = startY;
-            health = 2;
+            health = 3;
             isActive = true;
             return true;
         }
@@ -77,11 +77,12 @@ public class Block {
         rect.bottom = y + height;
     }
 
-    public void gotHit(){
+    public void gotHit(int strength){
         if(health > 0){
-            health--;
-        }else{
-            setInActive();
+            health = health - strength;
+            if(health < 1){
+                setInActive();
+            }
         }
     }
 
@@ -92,11 +93,15 @@ public class Block {
 
     public boolean getStatus(){return isActive;}
 
+    public int getHealth(){return health;}
+
+    public int getWidth(){return width;}
+
     public void setInActive(){isActive = false;}
     public Bitmap getBitmap() {
-        if(health == 2){
+        if(health == 3){
             return bitmap_1;
-        }else if(health == 1){
+        }else if(health == 2){
             return bitmap_2;
         }else{
             return bitmap_3;

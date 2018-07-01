@@ -6,12 +6,11 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.RectF;
 
-public class Quaarel {
-
+public class Hand {
     private RectF rect;
 
-    private Bitmap bitmap;
-    //private Bitmap bitmap_2;
+    private Bitmap bitmap_1;
+    private Bitmap bitmap_2;
     private Bitmap smallBitmap;
 
     private float length;
@@ -20,59 +19,49 @@ public class Quaarel {
     private float x;
     private float y;
 
-    private float quaarelSpeed;
-    //private boolean handPos;
 
+    //private float quaarelSpeed;
+    private boolean handPos;
 
-    public Quaarel(Context context, int screenX, int screenY) {
+    public Hand(Context context, int screenX, int screenY) {
 
         rect = new RectF();
 
-        length = screenX / 8;
-        height = length;
+        length = screenX / 7;
+        height = length/2;
 
-        x = screenX / 2 - (length/2);
-        y = screenY - (screenX / 5);
+        x = screenX / 2 + (length/2);
+        y = screenY - height * 2;
 
-        bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.quaarel);
+        bitmap_1 = BitmapFactory.decodeResource(context.getResources(), R.drawable.hand_1);
 
-        bitmap = Bitmap.createScaledBitmap(bitmap,
+        bitmap_1 = Bitmap.createScaledBitmap(bitmap_1,
                 (int) (length),
                 (int) (height),
                 false);
 
-        //bitmap_2 = BitmapFactory.decodeResource(context.getResources(), R.drawable.quaarel_2);
-//
-        //bitmap_2 = Bitmap.createScaledBitmap(bitmap_2,
-        //        (int) (length),
-        //        (int) (height),
-        //        false);
+        bitmap_2 = BitmapFactory.decodeResource(context.getResources(), R.drawable.hand_2);
 
-        smallBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.quaarel);
-        smallBitmap = Bitmap.createScaledBitmap(smallBitmap,
-                (int) (length / 2),
-                (int) (height / 2),
+        bitmap_2 = Bitmap.createScaledBitmap(bitmap_2,
+                (int) (length),
+                (int) (height),
                 false);
 
+        bitmap_1 = makeTransparent(bitmap_1);
+        bitmap_2 = makeTransparent(bitmap_2);
 
-        bitmap = makeTransparent(bitmap);
-        //bitmap_2 = makeTransparent(bitmap_2);
-        smallBitmap = makeTransparent(smallBitmap);
-
-        quaarelSpeed = 350;
+        //quaarelSpeed = 350;
     }
 
     public RectF getRect() {return rect;}
 
-   // public void swichPos(){handPos = !handPos;}
+     public void swichPos(){handPos = !handPos;}
 
     public Bitmap getBitmap() {
-   //     if(handPos) {return bitmap_1;
-  //      }else{return bitmap_2;}
-        return bitmap;
+             if(handPos) {return bitmap_1;
+              }else{return bitmap_2;}
     }
 
-    public Bitmap getSmallBitmap() {return smallBitmap;}
 
     public float getX() {return x;}
 
@@ -81,6 +70,32 @@ public class Quaarel {
     public void setX(float newX) {x = newX;}
 
     public float getLength() {return length;}
+
+    public void setX(Integer QuaarelX){
+        x = QuaarelX;
+    }
+
+    public void setSize(float newSize){
+        height = height * newSize;
+        length = length * newSize;
+        updateBitmap();
+        y = y + height - (height * newSize);
+    }
+
+    private void updateBitmap(){
+        bitmap_1 = Bitmap.createScaledBitmap(bitmap_1,
+                (int) (length),
+                (int) (height),
+                false);
+
+        bitmap_2 = Bitmap.createScaledBitmap(bitmap_2,
+                (int) (length),
+                (int) (height),
+                false);
+
+        bitmap_1 = makeTransparent(bitmap_1);
+        bitmap_2 = makeTransparent(bitmap_2);
+    }
 
     public void update() {
         rect.top = y;
