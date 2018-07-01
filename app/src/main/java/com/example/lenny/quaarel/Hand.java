@@ -9,8 +9,10 @@ import android.graphics.RectF;
 public class Hand {
     private RectF rect;
 
-    private Bitmap bitmap_1;
-    private Bitmap bitmap_2;
+    private Bitmap bitmap_1_r;
+    private Bitmap bitmap_2_r;
+    private Bitmap bitmap_1_l;
+    private Bitmap bitmap_2_l;
     private Bitmap smallBitmap;
 
     private float length;
@@ -19,8 +21,7 @@ public class Hand {
     private float x;
     private float y;
 
-
-    //private float quaarelSpeed;
+    private boolean moveRight = true;
     private boolean handPos;
 
     public Hand(Context context, int screenX, int screenY) {
@@ -33,22 +34,34 @@ public class Hand {
         x = screenX / 2 + (length/2);
         y = screenY - height * 2;
 
-        bitmap_1 = BitmapFactory.decodeResource(context.getResources(), R.drawable.hand_1);
-
-        bitmap_1 = Bitmap.createScaledBitmap(bitmap_1,
+        bitmap_1_r = BitmapFactory.decodeResource(context.getResources(), R.drawable.hand_1);
+        bitmap_1_r = Bitmap.createScaledBitmap(bitmap_1_r,
                 (int) (length),
                 (int) (height),
                 false);
 
-        bitmap_2 = BitmapFactory.decodeResource(context.getResources(), R.drawable.hand_2);
-
-        bitmap_2 = Bitmap.createScaledBitmap(bitmap_2,
+        bitmap_2_r = BitmapFactory.decodeResource(context.getResources(), R.drawable.hand_2);
+        bitmap_2_r = Bitmap.createScaledBitmap(bitmap_2_r,
                 (int) (length),
                 (int) (height),
                 false);
 
-        bitmap_1 = makeTransparent(bitmap_1);
-        bitmap_2 = makeTransparent(bitmap_2);
+        bitmap_1_l = BitmapFactory.decodeResource(context.getResources(), R.drawable.hand_1_l);
+        bitmap_1_l = Bitmap.createScaledBitmap(bitmap_1_l,
+                (int) (length),
+                (int) (height),
+                false);
+
+        bitmap_2_l = BitmapFactory.decodeResource(context.getResources(), R.drawable.hand_2_l);
+        bitmap_2_l = Bitmap.createScaledBitmap(bitmap_2_l,
+                (int) (length),
+                (int) (height),
+                false);
+
+        bitmap_1_r = makeTransparent(bitmap_1_r);
+        bitmap_2_r = makeTransparent(bitmap_2_r);
+        bitmap_1_l = makeTransparent(bitmap_1_l);
+        bitmap_2_l = makeTransparent(bitmap_2_l);
 
         //quaarelSpeed = 350;
     }
@@ -58,14 +71,36 @@ public class Hand {
      public void swichPos(){handPos = !handPos;}
 
     public Bitmap getBitmap() {
-             if(handPos) {return bitmap_1;
-              }else{return bitmap_2;}
+             if(handPos) {
+                 if(moveRight){
+                     return bitmap_1_r;
+                 }else{
+                     return bitmap_1_l;
+                 }
+              }else {
+                 if (moveRight) {
+                     return bitmap_2_r;
+
+                 } else {
+                     return bitmap_2_l;
+                 }
+             }
     }
 
 
     public float getX() {return x;}
 
     public float getY() {return y;}
+
+    public boolean getRight() {return moveRight;}
+
+    public void setRight(boolean setRight){
+        if (setRight){
+            moveRight = true;
+        }else{
+            moveRight = false;
+        }
+    }
 
     public void setX(float newX) {x = newX;}
 
@@ -83,18 +118,29 @@ public class Hand {
     }
 
     private void updateBitmap(){
-        bitmap_1 = Bitmap.createScaledBitmap(bitmap_1,
+        bitmap_1_r = Bitmap.createScaledBitmap(bitmap_1_r,
                 (int) (length),
                 (int) (height),
                 false);
 
-        bitmap_2 = Bitmap.createScaledBitmap(bitmap_2,
+        bitmap_2_r = Bitmap.createScaledBitmap(bitmap_2_r,
+                (int) (length),
+                (int) (height),
+                false);
+        bitmap_1_l = Bitmap.createScaledBitmap(bitmap_1_l,
                 (int) (length),
                 (int) (height),
                 false);
 
-        bitmap_1 = makeTransparent(bitmap_1);
-        bitmap_2 = makeTransparent(bitmap_2);
+        bitmap_2_l = Bitmap.createScaledBitmap(bitmap_2_l,
+                (int) (length),
+                (int) (height),
+                false);
+
+        bitmap_1_r = makeTransparent(bitmap_1_r);
+        bitmap_2_r = makeTransparent(bitmap_2_r);
+        bitmap_1_l = makeTransparent(bitmap_1_l);
+        bitmap_2_l = makeTransparent(bitmap_2_l);
     }
 
     public void update() {

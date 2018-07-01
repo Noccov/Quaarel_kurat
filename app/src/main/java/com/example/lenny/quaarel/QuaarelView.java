@@ -67,6 +67,7 @@ public class QuaarelView extends SurfaceView implements Runnable{
     private int rockCnt = 0;
     private int second = 0;
     private int cnt = 0;
+    private int blockHealth = 0;
 
     //For movement
     private float moveX;
@@ -125,15 +126,14 @@ public class QuaarelView extends SurfaceView implements Runnable{
 
      @Override
      public void run(){
-         while(playing && hasWindowFocus()){
+         while(playing){
 
              long startFrameTime = System.currentTimeMillis();
 
              if(!paused){
                  update();
-                 draw();
              }
-             //draw();
+             draw();
 
 
              timeThisFrame = System.currentTimeMillis() - startFrameTime;
@@ -144,7 +144,11 @@ public class QuaarelView extends SurfaceView implements Runnable{
     private void update(){
 
         quaarel.update();
-        hand.setX(quaarel.getX() + quaarel.getLength() - (quaarel.getLength()/10));
+        if(hand.getRight()) {
+            hand.setX(quaarel.getX() + quaarel.getLength() - (quaarel.getLength() / 10));
+        }else{
+            hand.setX(quaarel.getX() - hand.getLength());
+        }
         hand.update();
 
         score++;
@@ -242,12 +246,12 @@ public class QuaarelView extends SurfaceView implements Runnable{
 
         if(!bossFight) {
             randomNumber = generator.nextInt(7);
-
             for (int i = 0; i < 7; i++) {
                 if (newRow) {
+                    blockHealth = generator.nextInt((strength * 5)) + 1;
                     if (randomNumber != i) {
                         if (!block[(RowCnt * 7) + i].getStatus()) {
-                            block[(RowCnt * 7) + i].init(i * screenX / 7, 0);
+                            block[(RowCnt * 7) + i].init(i * screenX / 7, 0, blockHealth, (strength*5)+1);
                         }
                     }
                 }
@@ -273,7 +277,11 @@ public class QuaarelView extends SurfaceView implements Runnable{
 
             if(!rock[i].getStatus()) {
                 if (newRock) {
-                    rock[rockCnt].init(hand.getX() + (hand.getLength()/2), Math.round(hand.getY()));
+                    if(hand.getRight()) {
+                        rock[rockCnt].init(hand.getX() + (hand.getLength() / 2), Math.round(hand.getY()));
+                    }else{
+                        rock[rockCnt].init(hand.getX() - (hand.getLength() / 2), Math.round(hand.getY()));
+                    }
                 }
             }
             if(rock[i].getImpactPointY() < 0){
@@ -390,12 +398,12 @@ public class QuaarelView extends SurfaceView implements Runnable{
             for(int i = 0; i < block.length; i++) {
                 if (block[i].getStatus()) {
                     canvas.drawBitmap(block[i].getBitmap(), block[i].getX(), block[i].getY(), paint);
-                    if(block[i].getHealth() == 3){
-                        paint.setColor(Color.GREEN);
-                    }else if(block[i].getHealth() == 2){
+                    if(block[i].getHealth() < (block[i].getMaxHealth() / 3)){
+                        paint.setColor(Color.RED);
+                    }else if(block[i].getHealth() < (block[i].getMaxHealth() / 3 * 2)){
                         paint.setColor(Color.YELLOW);
                     }else{
-                        paint.setColor(Color.RED);
+                        paint.setColor(Color.GREEN);
                     }
                     canvas.drawText(String.valueOf(block[i].getHealth()), block[i].getX() + (block[i].getWidth() / 2) - 14, block[i].getY() - 14, paint);
                 }
@@ -450,8 +458,15 @@ public class QuaarelView extends SurfaceView implements Runnable{
                 break;
 
             case MotionEvent.ACTION_MOVE:
-                if((quaarel.getX() > 0 && moveX > motionEvent.getX()) || (quaarel.getX() < screenX - quaarel.getLength() && moveX < motionEvent.getX()) ){
+                if((hand.getX() > 0 && moveX > motionEvent.getX()) || (quaarel.getX() < screenX - (quaarel.getLength() + hand.getLength()) && moveX < motionEvent.getX()) ){
                     quaarel.setX(quaarel.getX() + motionEvent.getX() - moveX);
+                }
+                if(motionEvent.getX() > moveX){
+                    quaarel.setRight(true);
+                    hand.setRight(true);
+                }else{
+                    quaarel.setRight(false);
+                    hand.setRight(false);
                 }
                 moveX = motionEvent.getX();
                 break;

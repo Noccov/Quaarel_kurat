@@ -24,6 +24,7 @@ public class Block {
     private int height;
 
     private int health = 3;
+    private int maxHealth = 3;
 
     private boolean isActive;
 
@@ -57,11 +58,12 @@ public class Block {
 
     }
 
-    public boolean init(float startX, float startY){
+    public boolean init(float startX, float startY, int newHealth, int max){
         if(!isActive){
             x = startX;
             y = startY;
-            health = 3;
+            health = newHealth;
+            maxHealth = max;
             isActive = true;
             return true;
         }
@@ -95,16 +97,18 @@ public class Block {
 
     public int getHealth(){return health;}
 
+    public int getMaxHealth(){return maxHealth;}
+
     public int getWidth(){return width;}
 
     public void setInActive(){isActive = false;}
     public Bitmap getBitmap() {
-        if(health == 3){
-            return bitmap_1;
-        }else if(health == 2){
+        if(health < maxHealth / 3){
+            return bitmap_3;
+        }else if(health < maxHealth / 3 * 2){
             return bitmap_2;
         }else{
-            return bitmap_3;
+            return bitmap_1;
         }
     }
 

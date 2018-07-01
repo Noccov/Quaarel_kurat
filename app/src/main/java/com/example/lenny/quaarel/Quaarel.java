@@ -10,7 +10,8 @@ public class Quaarel {
 
     private RectF rect;
 
-    private Bitmap bitmap;
+    private Bitmap bitmap_r;
+    private Bitmap bitmap_l;
     //private Bitmap bitmap_2;
     private Bitmap smallBitmap;
 
@@ -21,7 +22,7 @@ public class Quaarel {
     private float y;
 
     private float quaarelSpeed;
-    //private boolean handPos;
+    private boolean moveRight;
 
 
     public Quaarel(Context context, int screenX, int screenY) {
@@ -34,9 +35,16 @@ public class Quaarel {
         x = screenX / 2 - (length/2);
         y = screenY - (screenX / 5);
 
-        bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.quaarel);
+        bitmap_r = BitmapFactory.decodeResource(context.getResources(), R.drawable.quaarel);
 
-        bitmap = Bitmap.createScaledBitmap(bitmap,
+        bitmap_r = Bitmap.createScaledBitmap(bitmap_r,
+                (int) (length),
+                (int) (height),
+                false);
+
+        bitmap_l = BitmapFactory.decodeResource(context.getResources(), R.drawable.quaarel_l);
+
+        bitmap_l = Bitmap.createScaledBitmap(bitmap_l,
                 (int) (length),
                 (int) (height),
                 false);
@@ -55,8 +63,8 @@ public class Quaarel {
                 false);
 
 
-        bitmap = makeTransparent(bitmap);
-        //bitmap_2 = makeTransparent(bitmap_2);
+        bitmap_l = makeTransparent(bitmap_l);
+        bitmap_r = makeTransparent(bitmap_r);
         smallBitmap = makeTransparent(smallBitmap);
 
         quaarelSpeed = 350;
@@ -67,9 +75,9 @@ public class Quaarel {
    // public void swichPos(){handPos = !handPos;}
 
     public Bitmap getBitmap() {
-   //     if(handPos) {return bitmap_1;
-  //      }else{return bitmap_2;}
-        return bitmap;
+        if(moveRight) {return bitmap_r;
+        }else{return bitmap_l;}
+        //return bitmap_l;
     }
 
     public Bitmap getSmallBitmap() {return smallBitmap;}
@@ -79,6 +87,10 @@ public class Quaarel {
     public float getY() {return y;}
 
     public void setX(float newX) {x = newX;}
+
+    public void setRight(boolean setRight){
+        moveRight = setRight;
+    }
 
     public float getLength() {return length;}
 
