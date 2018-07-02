@@ -39,6 +39,8 @@ public class QuaarelView extends SurfaceView implements Runnable{
     private Quaarel quaarel;
     private Hand hand;
     private Boss boss;
+    private BossHealthBar bossHealthBar;
+    private int bossHealth = 25;
     private Block[] block = new Block[25];
     private Rock[] rock = new Rock[50];
     private Book book;
@@ -116,6 +118,7 @@ public class QuaarelView extends SurfaceView implements Runnable{
         quaarel = new Quaarel(context, screenX, screenY);
         hand = new Hand(context, screenX, screenY);
         boss = new Boss(context, screenX);
+        bossHealthBar = new BossHealthBar(context, screenX);
         book = new Book(context, screenX);
         powerupHealth = new PowerupHealth(context, screenX);
         powerupSpeed = new PowerupSpeed(context, screenX);
@@ -213,7 +216,8 @@ public class QuaarelView extends SurfaceView implements Runnable{
         //start bossfight
         if(score == bossTime){
             bossFight = true;
-            boss.init(screenX);
+            boss.init(screenX, bossHealth);
+            bossHealthBar.init(context, screenX, bossHealth);
             soundManager.playMusic();
         }
 
@@ -288,6 +292,7 @@ public class QuaarelView extends SurfaceView implements Runnable{
                 }
                 if(boss.getStatus() && RectF.intersects(rock[i].getRect(), boss.getRect())){
                     boss.gotHit(strength);
+                    bossHealthBar.gotHit(strength);
                     rock[i].setInActive();
                 }
             }
@@ -314,6 +319,7 @@ public class QuaarelView extends SurfaceView implements Runnable{
                 bossFight = false;
                 bossTime = score + 1000;
                 boss.setInActive();
+                bossHealthBar.setInactive();
                 soundManager.stopMusic();
             }
             if(!book.getStatus() && score > 350){
@@ -413,6 +419,8 @@ public class QuaarelView extends SurfaceView implements Runnable{
                 canvas.drawBitmap(hand.getBitmap(), hand.getX(), hand.getY(), paint);
             }
             if(boss.getStatus()) {canvas.drawBitmap(boss.getBitmap(), boss.getX(), boss.getY(), paint);}
+            if(bossHealthBar.getStatus()) {canvas.drawBitmap(bossHealthBar.getBackBitmap(), bossHealthBar.getX(), bossHealthBar.getY(), paint);}
+            if(bossHealthBar.getStatus()) {canvas.drawBitmap(bossHealthBar.getFrontBitmap(), bossHealthBar.getX(), bossHealthBar.getY(), paint);}
             if(book.getStatus()) {canvas.drawBitmap(book.getBitmap(), book.getX(), book.getY(), paint);}
             if(powerupHealth.getStatus()) {canvas.drawBitmap(powerupHealth.getBitmap(), powerupHealth.getX(), powerupHealth.getY(), paint);}
             if(powerupSpeed.getStatus()) {canvas.drawBitmap(powerupSpeed.getBitmap(), powerupSpeed.getX(), powerupSpeed.getY(), paint);}

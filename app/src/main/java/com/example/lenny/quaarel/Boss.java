@@ -61,12 +61,12 @@ public class Boss {
         bitmap_2 = makeTransparent(bitmap_2);
     }
 
-    public boolean init(int screenX){
+    public boolean init(int screenX, int initHealth){
         if(!isActive){
             isHit = false;
             bossMoving = 0;
             cnt = 0;
-            health = 20;
+            health = initHealth;
             x = screenX / 2 - (width/2);
             y = -height;
             isActive = true;
