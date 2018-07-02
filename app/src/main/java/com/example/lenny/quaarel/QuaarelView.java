@@ -46,6 +46,7 @@ public class QuaarelView extends SurfaceView implements Runnable{
     private boolean newRock;
     private boolean bossFight = false;
     private int strength = 1;
+    private PauseButton pauseButton;
 
     //Powerup-s
     private PowerupHealth powerupHealth;
@@ -86,9 +87,10 @@ public class QuaarelView extends SurfaceView implements Runnable{
 
         soundManager = new SoundManager(context);
         prepareLevel();
+        gamethread = new Thread(this);
     }
 
-    private void prepareLevel(){
+    public void prepareLevel(){
         //Initialize game variables
         bossFight = false;
         lives = 2;
@@ -113,6 +115,7 @@ public class QuaarelView extends SurfaceView implements Runnable{
         powerupCloud = new PowerupCloud(context, screenX);
         powerupSizeBig = new PowerupSizeBig(context, screenX);
         cloud = new Cloud(context, screenX);
+        pauseButton = new PauseButton(context, screenX);
 
         for(int i = 0; i < block.length; i++) {
             block[i] = new Block(context, screenX);
@@ -121,7 +124,7 @@ public class QuaarelView extends SurfaceView implements Runnable{
         for(int i = 0; i < rock.length; i++){
             rock[i] = new Rock(context, screenX);
         }
-
+        paused = true;
     }
 
      @Override
@@ -134,7 +137,6 @@ public class QuaarelView extends SurfaceView implements Runnable{
                  update();
              }
              draw();
-
 
              timeThisFrame = System.currentTimeMillis() - startFrameTime;
              if(timeThisFrame > 0){fps = 1000 / timeThisFrame;}
@@ -422,6 +424,9 @@ public class QuaarelView extends SurfaceView implements Runnable{
             paint.setTextSize(28);
             canvas.drawText("Score: " + score,10,50,paint);
 
+            //Pause button
+            canvas.drawBitmap(pauseButton.getBitmap(),screenX - (screenX / 10), screenY / 11, paint);
+
 
             //Cloud is drawn last so it will be on top of everything else
             if(cloud.getStatus()) {canvas.drawBitmap(cloud.getBitmap(), cloud.getX(), cloud.getY(), paint);}
@@ -438,24 +443,40 @@ public class QuaarelView extends SurfaceView implements Runnable{
         }catch (InterruptedException e){
             Log.e("Error:", "joining thread");
         }
+        soundManager.stopMusic();
     }
 
     public void resume(){
         playing = true;
-        paused = false;
+        //paused = false;
         gamethread = new Thread(this);
         gamethread.start();
+        if (bossFight) {
+            soundManager.playMusic();
+        }
     }
+
+    //canvas.drawBitmap(pauseButton.getBitmap(),screenX - (screenX / 10), screenY / 11, paint);
 
     @Override
     public boolean onTouchEvent(MotionEvent motionEvent){
 
         switch (motionEvent.getAction() & MotionEvent.ACTION_MASK){
 
+
+            /*case MotionEvent.PointerCoords:
+                if ((MotionEvent.getX() > screenX - (screenX / 10)) && (MotionEvent.getX() < screenX) && (MotionEvent.getY()> (screenY / 11)) && (MotionEvent.getY() < ((screenY / 11) - (screenX / 10))))
+                {
+                    pause();
+                    break;
+                }*/
+
             case MotionEvent.ACTION_DOWN:
-                paused = false;
-                moveX = motionEvent.getX();
-                break;
+
+                    paused = false;
+                    moveX = motionEvent.getX();
+                    break;
+
 
             case MotionEvent.ACTION_MOVE:
                 if((hand.getX() > 0 && moveX > motionEvent.getX()) || (quaarel.getX() < screenX - (quaarel.getLength() + hand.getLength()) && moveX < motionEvent.getX()) ){
