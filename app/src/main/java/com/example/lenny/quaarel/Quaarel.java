@@ -22,7 +22,7 @@ public class Quaarel {
     private float y;
 
     private float quaarelSpeed;
-    private boolean moveRight;
+    private boolean moveRight = true;
 
 
     public Quaarel(Context context, int screenX, int screenY) {
@@ -33,7 +33,7 @@ public class Quaarel {
         height = length;
 
         x = screenX / 2 - (length/2);
-        y = screenY - (screenX / 5);
+        y = screenY - (screenX / 4);
 
         bitmap_r = BitmapFactory.decodeResource(context.getResources(), R.drawable.quaarel);
 

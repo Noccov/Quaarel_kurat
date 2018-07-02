@@ -28,11 +28,11 @@ public class Hand {
 
         rect = new RectF();
 
-        length = screenX / 7;
-        height = length/2;
+        length = screenX / 15;
+        height = length * 2;
 
-        x = screenX / 2 + (length/2);
-        y = screenY - height * 2;
+        x = screenX / 2 + (length / (float) 1.3);
+        y = screenY - height * (float) 1.7;
 
         bitmap_1_r = BitmapFactory.decodeResource(context.getResources(), R.drawable.hand_1);
         bitmap_1_r = Bitmap.createScaledBitmap(bitmap_1_r,

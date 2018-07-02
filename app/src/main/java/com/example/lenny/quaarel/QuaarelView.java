@@ -69,9 +69,14 @@ public class QuaarelView extends SurfaceView implements Runnable{
     private int second = 0;
     private int cnt = 0;
     private int blockHealth = 0;
+    private boolean godMode;
+    private int godModeEnd = 0;
 
     //For movement
     private float moveX;
+    private float moveRightPos;
+    private float moveLeftPos;
+    private boolean moveRight;
 
 
     public QuaarelView(Context context, int x, int y){
@@ -104,6 +109,8 @@ public class QuaarelView extends SurfaceView implements Runnable{
         speedEnd = 0;
         bossTime = 750;
         strength = 1;
+        godMode = false;
+        godModeEnd = 0;
 
         //Create objects
         quaarel = new Quaarel(context, screenX, screenY);
@@ -160,6 +167,10 @@ public class QuaarelView extends SurfaceView implements Runnable{
             paused = true;
             soundManager.stopMusic();
             prepareLevel();
+        }
+
+        if (score == godModeEnd){
+            godMode = false;
         }
 
         //Count seconds played
@@ -236,8 +247,12 @@ public class QuaarelView extends SurfaceView implements Runnable{
 
             if (block[i].getStatus()) {
                 if (RectF.intersects(quaarel.getRect(), block[i].getRect()) || RectF.intersects(hand.getRect(), block[i].getRect())) {
-                    lives--;
-                    block[i].setInActive();
+                    if(!godMode) {
+                        lives--;
+                        block[i].setInActive();
+                        godMode = true;
+                        godModeEnd = score + 100;
+                    }
                 }
             }
 
@@ -282,7 +297,7 @@ public class QuaarelView extends SurfaceView implements Runnable{
                     if(hand.getRight()) {
                         rock[rockCnt].init(hand.getX() + (hand.getLength() / 2), Math.round(hand.getY()));
                     }else{
-                        rock[rockCnt].init(hand.getX() - (hand.getLength() / 2), Math.round(hand.getY()));
+                        rock[rockCnt].init(hand.getX(), Math.round(hand.getY()));
                     }
                 }
             }
@@ -309,8 +324,12 @@ public class QuaarelView extends SurfaceView implements Runnable{
         if(book.getStatus()){
             book.update(fps);
             if(RectF.intersects(book.getRect(), quaarel.getRect())){
-                lives--;
-                book.setInActive();
+                if(!godMode) {
+                    lives--;
+                    book.setInActive();
+                    godMode = true;
+                    godModeEnd = score + 100;
+                }
             }
         }
 
@@ -389,8 +408,10 @@ public class QuaarelView extends SurfaceView implements Runnable{
             paint.setTextSize(28);
 
             //All drawings (if items are active)
-            canvas.drawBitmap(quaarel.getBitmap(), quaarel.getX(), quaarel.getY(), paint);
-            canvas.drawBitmap(hand.getBitmap(), hand.getX(), hand.getY(), paint);
+            if(!godMode || (score % 20 < 11) ) {
+                canvas.drawBitmap(quaarel.getBitmap(), quaarel.getX(), quaarel.getY(), paint);
+                canvas.drawBitmap(hand.getBitmap(), hand.getX(), hand.getY(), paint);
+            }
             if(boss.getStatus()) {canvas.drawBitmap(boss.getBitmap(), boss.getX(), boss.getY(), paint);}
             if(book.getStatus()) {canvas.drawBitmap(book.getBitmap(), book.getX(), book.getY(), paint);}
             if(powerupHealth.getStatus()) {canvas.drawBitmap(powerupHealth.getBitmap(), powerupHealth.getX(), powerupHealth.getY(), paint);}
@@ -482,10 +503,17 @@ public class QuaarelView extends SurfaceView implements Runnable{
                 if((hand.getX() > 0 && moveX > motionEvent.getX()) || (quaarel.getX() < screenX - (quaarel.getLength() + hand.getLength()) && moveX < motionEvent.getX()) ){
                     quaarel.setX(quaarel.getX() + motionEvent.getX() - moveX);
                 }
-                if(motionEvent.getX() > moveX){
+                if(motionEvent.getX() > moveX && !moveRight){
+                    moveRightPos = quaarel.getX() + (screenX/8);
+                    moveRight = true;
+                }else if(motionEvent.getX() < moveX && moveRight){
+                    moveLeftPos = quaarel.getX() - (screenX/8);
+                    moveRight = false;
+                }
+                if(quaarel.getX() > moveRightPos && moveRight){
                     quaarel.setRight(true);
                     hand.setRight(true);
-                }else{
+                }else if(quaarel.getX() < moveLeftPos && !moveRight){
                     quaarel.setRight(false);
                     hand.setRight(false);
                 }

@@ -46,7 +46,7 @@ public class PowerupSizeBig {
     }
     public boolean init(){
         if(!isActive){
-            randomNumber = generator.nextInt((Math.round(length) * 10) - Math.round(length));
+            randomNumber = generator.nextInt((Math.round(length) * 5) - Math.round(length));
             x = randomNumber;
             y = 0;
             isActive = true;
