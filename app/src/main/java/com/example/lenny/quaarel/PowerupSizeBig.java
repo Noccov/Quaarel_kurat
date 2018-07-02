@@ -11,7 +11,11 @@ public class PowerupSizeBig {
 
     private RectF rect;
 
-    private Bitmap bitmap;
+    private Bitmap bitmap_1;
+    private Bitmap bitmap_2;
+    private Bitmap bitmap_3;
+    private Bitmap bitmap_4;
+    private int cnt = 0;
 
     private float length;
     private float height;
@@ -32,16 +36,33 @@ public class PowerupSizeBig {
 
         rect = new RectF();
 
-        length = screenX / 5;
+        length = screenX / 25;
         height = length;
 
-        bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.rock);
-
-        bitmap = Bitmap.createScaledBitmap(bitmap,
+        bitmap_1 = BitmapFactory.decodeResource(context.getResources(), R.drawable.rock);
+        bitmap_1 = Bitmap.createScaledBitmap(bitmap_1,
                 (int) (length),
                 (int) (height),
                 false);
-        bitmap = makeTransparent(bitmap);
+        bitmap_2 = BitmapFactory.decodeResource(context.getResources(), R.drawable.rock);
+        bitmap_2 = Bitmap.createScaledBitmap(bitmap_2,
+                (int) (length*2),
+                (int) (height*2),
+                false);
+        bitmap_3 = BitmapFactory.decodeResource(context.getResources(), R.drawable.rock);
+        bitmap_3 = Bitmap.createScaledBitmap(bitmap_3,
+                (int) (length*3),
+                (int) (height*3),
+                false);
+        bitmap_4 = BitmapFactory.decodeResource(context.getResources(), R.drawable.rock);
+        bitmap_4 = Bitmap.createScaledBitmap(bitmap_4,
+                (int) (length*4),
+                (int) (height*4),
+                false);
+        bitmap_1 = makeTransparent(bitmap_1);
+        bitmap_2 = makeTransparent(bitmap_2);
+        bitmap_3 = makeTransparent(bitmap_3);
+        bitmap_4 = makeTransparent(bitmap_4);
 
     }
     public boolean init(){
@@ -57,7 +78,18 @@ public class PowerupSizeBig {
 
     public RectF getRect() {return rect;}
 
-    public Bitmap getBitmap() {return bitmap;}
+    public Bitmap getBitmap() {
+        if(cnt < 10) {
+            return bitmap_1;
+        }else if(cnt < 20)
+        {
+            return bitmap_2;
+        }else if(cnt < 30){
+            return bitmap_3;
+        }else{
+            return bitmap_4;
+        }
+    }
 
     public float getX() {return x;}
 
@@ -67,11 +99,15 @@ public class PowerupSizeBig {
 
     public void update(long fps) {
         y = y + speed / fps;
-
+        if(cnt < 40){
+            cnt++;
+        }else{
+            cnt=0;
+        }
         rect.top = y;
-        rect.bottom = y + height;
+        rect.bottom = y + (height * 4);
         rect.left = x;
-        rect.right = x + length;
+        rect.right = x + (length * 4);
     }
 
     public void setInactive(){isActive = false;}
