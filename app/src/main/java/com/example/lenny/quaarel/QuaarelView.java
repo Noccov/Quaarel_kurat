@@ -49,6 +49,7 @@ public class QuaarelView extends SurfaceView implements Runnable{
     private boolean bossFight = false;
     private int strength = 1;
     private PauseButton pauseButton;
+    private float gameSpeed = 1;
 
     //Powerup-s
     private PowerupHealth powerupHealth;
@@ -114,6 +115,7 @@ public class QuaarelView extends SurfaceView implements Runnable{
         strength = 1;
         godMode = false;
         godModeEnd = 0;
+        gameSpeed = 1;
 
         //Create objects
         quaarel = new Quaarel(context, screenX, screenY);
@@ -151,7 +153,9 @@ public class QuaarelView extends SurfaceView implements Runnable{
              draw();
 
              timeThisFrame = System.currentTimeMillis() - startFrameTime;
-             if(timeThisFrame > 0){fps = 1000 / timeThisFrame;}
+             if(timeThisFrame > 0){
+                 fps = 1000 / (long) (timeThisFrame * gameSpeed);
+             }
          }
      }
 
@@ -199,7 +203,7 @@ public class QuaarelView extends SurfaceView implements Runnable{
         }
 
         //create new rock after every 10/20 scorepoints
-        if (score % (20/speedCoef) == 0 && score > 10) {
+        if (score % (30/(int) Math.ceil(speedCoef + (gameSpeed/20))) == 0 && score > 10) {
             newRock = true;
             if (rockCnt < 49) {
                 rockCnt++;
@@ -211,7 +215,7 @@ public class QuaarelView extends SurfaceView implements Runnable{
         }
 
         //switch hand position half of every new rock
-        if(score % (10/speedCoef) == 0){
+        if(score % (15/(int) Math.ceil(speedCoef + (gameSpeed/20))) == 0){
             hand.swichPos();
         }
 
@@ -325,6 +329,7 @@ public class QuaarelView extends SurfaceView implements Runnable{
                 boss.setInActive();
                 bossHealthBar.setInactive();
                 soundManager.stopMusic();
+                gameSpeed = gameSpeed + (float) (0.5/gameSpeed);
             }
             if(!book.getStatus() && score > 350){
                 book.init(boss.getX(), boss.getY());
