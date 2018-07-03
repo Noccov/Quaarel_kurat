@@ -329,7 +329,7 @@ public class QuaarelView extends SurfaceView implements Runnable{
                 boss.setInActive();
                 bossHealthBar.setInactive();
                 soundManager.stopMusic();
-                gameSpeed = gameSpeed + (float) (0.5/gameSpeed);
+                gameSpeed = gameSpeed + (float) (0.2/gameSpeed);
             }
             if(!book.getStatus() && score > 350){
                 book.init(boss.getX(), boss.getY());
