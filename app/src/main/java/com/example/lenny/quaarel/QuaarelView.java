@@ -175,6 +175,7 @@ public class QuaarelView extends SurfaceView implements Runnable{
         if (lives < 1) {
             paused = true;
             soundManager.stopMusic();
+            soundManager.stopBoss();
             prepareLevel();
         }
 
@@ -224,7 +225,8 @@ public class QuaarelView extends SurfaceView implements Runnable{
             bossFight = true;
             boss.init(screenX, bossHealth);
             bossHealthBar.init(context, screenX, bossHealth);
-            soundManager.playMusic();
+            soundManager.hideMusic();
+            soundManager.playBoss();
         }
 
         //initialize powerup
@@ -327,8 +329,10 @@ public class QuaarelView extends SurfaceView implements Runnable{
                 bossFight = false;
                 bossTime = score + 1000;
                 boss.setInActive();
+                bossHealth = bossHealth + 25;
                 bossHealthBar.setInactive();
-                soundManager.stopMusic();
+                soundManager.stopBoss();
+                soundManager.continueMusic();
                 gameSpeed = gameSpeed + (float) (0.2/gameSpeed);
             }
             if(!book.getStatus() && score > 350){
@@ -496,6 +500,7 @@ public class QuaarelView extends SurfaceView implements Runnable{
             Log.e("Error:", "joining thread");
         }
         soundManager.stopMusic();
+        soundManager.stopBoss();
     }
 
     public void resume(){
@@ -503,8 +508,9 @@ public class QuaarelView extends SurfaceView implements Runnable{
         //paused = false;
         gamethread = new Thread(this);
         gamethread.start();
+        soundManager.playMusic();
         if (bossFight) {
-            soundManager.playMusic();
+            soundManager.playBoss();
         }
     }
 

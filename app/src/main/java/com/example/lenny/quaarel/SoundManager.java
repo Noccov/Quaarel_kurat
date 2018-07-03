@@ -1,6 +1,7 @@
 package com.example.lenny.quaarel;
 
 import android.media.AudioAttributes;
+import android.media.MediaPlayer;
 import android.media.SoundPool;
 import android.media.SoundPool.OnLoadCompleteListener;
 import android.content.Context;
@@ -12,7 +13,10 @@ public class SoundManager {
 
     private  SoundPool ourSounds;
     private int bossMusic;
-    private int stream;
+    private int bgMusic;
+    private int bgStream;
+    private int bossStream;
+    private MediaPlayer mp;
 
 
     public SoundManager(Context context) {
@@ -32,16 +36,36 @@ public class SoundManager {
        //     }
        // });
         bossMusic = ourSounds.load(context, R.raw.bossfight, 1);
+        //bgMusic = ourSounds.load(context, R.raw.kindakirjad,3);
 
+
+        mp = MediaPlayer.create(context, R.raw.kindakirjad);
+        mp.setLooping(true);
     }
 
 
     public void playMusic() {
-         stream = ourSounds.play(bossMusic, 0.9f, 0.9f, 1, 1, 1);
+         //bgStream = ourSounds.play(bgMusic, 0.9f, 0.9f, 1, 1, 1);
+        mp.start();
     }
 
-    public void stopMusic() {
-        ourSounds.stop(stream);
+    public void stopMusic(){
+        mp.stop();
+    }
+    public void hideMusic() {
+        //ourSounds.stop(bgStream);
+        mp.setVolume(0,0);
+    }
+    public void continueMusic(){
+        mp.setVolume(1,1);
+    }
+
+    public void playBoss() {
+        bossStream = ourSounds.play(bossMusic, 0.9f, 0.9f, 1, 1, 1);
+    }
+
+    public void stopBoss() {
+        ourSounds.stop(bossStream);
     }
 
 }
