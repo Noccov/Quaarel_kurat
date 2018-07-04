@@ -16,6 +16,7 @@ public class Boss {
 
     private Bitmap bitmap_1;
     private Bitmap bitmap_2;
+    private Bitmap bitmap_rage;
 
     float speed = 200;
 
@@ -39,6 +40,7 @@ public class Boss {
     private boolean invincible = true;
     private boolean isHit;
     private int cnt = 0;
+    private boolean rage = false;
 
 
     public Boss(Context context, int screenX){
@@ -64,8 +66,15 @@ public class Boss {
                 height,
                 false);
 
+        bitmap_rage = BitmapFactory.decodeResource(context.getResources(), R.drawable.liina_rage);
+        bitmap_rage = Bitmap.createScaledBitmap(bitmap_rage,
+                width,
+                height,
+                false);
+
         bitmap_1 = makeTransparent(bitmap_1);
         bitmap_2 = makeTransparent(bitmap_2);
+        bitmap_rage = makeTransparent(bitmap_rage);
     }
 
     public boolean init(int screenX, int initHealth){
@@ -152,11 +161,6 @@ public class Boss {
         }
     }
 
-    public void quaarelMangib(){
-
-
-    }
-
     public float getX(){return x;}
     public float getY(){return y;}
 
@@ -168,9 +172,18 @@ public class Boss {
 
     public boolean getInvincible(){return invincible;}
 
+    public int getHeight(){return height;}
+
     public boolean getCharge(){return charge;}
 
+    public void setRage(boolean newRage){rage = newRage;}
+
+    public boolean getRage(){return rage;}
+
     public Bitmap getBitmap() {
+        if(rage){
+            return bitmap_rage;
+        }
         if(isHit){
             return bitmap_2;
         }else {

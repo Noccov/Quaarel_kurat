@@ -45,6 +45,7 @@ public class QuaarelView extends SurfaceView implements Runnable{
     private int bossHealth = 25;
     private Block[] block = new Block[25];
     private Rock[] rock = new Rock[50];
+    private Lazer[] lazer = new Lazer[10];
     private Book book;
     private boolean newRow;
     private boolean newRock;
@@ -52,6 +53,7 @@ public class QuaarelView extends SurfaceView implements Runnable{
     private int strength = 1;
     private PauseButton pauseButton;
     private float gameSpeed = 1;
+    private int lazerCnt = 0;
 
     //Powerup-s
     private PowerupHealth powerupHealth;
@@ -138,6 +140,9 @@ public class QuaarelView extends SurfaceView implements Runnable{
         pauseButton = new PauseButton(context, screenX);
         powerupController = new PowerupController(context, screenX);
 
+        for(int i = 0; i < lazer.length; i++) {
+            lazer[i] = new Lazer(context, screenX);
+        }
         for(int i = 0; i < block.length; i++) {
             block[i] = new Block(context, screenX);
         }
@@ -373,6 +378,31 @@ public class QuaarelView extends SurfaceView implements Runnable{
             }
         }
 
+        if(boss.getRage() && score % 10 == 0){
+            lazer[lazerCnt].init(boss.getX() + (boss.getHeight()/3), boss.getY() + (boss.getHeight()/2));
+            lazerCnt++;
+        }
+        if(lazerCnt == 5){
+            boss.setRage(false);
+            lazerCnt = 0;
+        }
+
+        for(int i = 0; i < lazer.length; i++){
+            if(lazer[i].getStatus()){
+                lazer[i].update(fps);
+                if(RectF.intersects(quaarel.getRect(), lazer[i].getRect()) && !godMode){
+                    lives--;
+                    lazer[i].setInActive();
+                    godMode = true;
+                    godModeEnd = score + 100;
+                }
+            }
+
+            if(lazer[i].getImpactPointY() > screenY){
+                  lazer[i].setInActive();
+           }
+        }
+
         if(book.getImpactPointY() > screenY){
             book.setInActive();
         }
@@ -455,7 +485,7 @@ public class QuaarelView extends SurfaceView implements Runnable{
         if(powerupController.getStatus()){
             powerupController.update(fps);
             if(RectF.intersects(powerupController.getRect(), quaarel.getRect()) || RectF.intersects(powerupController.getRect(), hand.getRect())){
-                //???????????????????????????????
+                boss.setRage(true);
                 powerupController.setInactive();
             }
             if(powerupController.getImpactPointY() > screenY){
@@ -487,6 +517,11 @@ public class QuaarelView extends SurfaceView implements Runnable{
             if(powerupSizeBig.getStatus()) {canvas.drawBitmap(powerupSizeBig.getBitmap(), powerupSizeBig.getX(), powerupSizeBig.getY(), paint);}
             if(powerupGodMode.getStatus()) {canvas.drawBitmap(powerupGodMode.getBitmap(), powerupGodMode.getX(), powerupGodMode.getY(), paint);}
             if(powerupController.getStatus()) {canvas.drawBitmap(powerupController.getBitmap(), powerupController.getX(), powerupController.getY(), paint);}
+            for(int i = 0; i < lazer.length; i++){
+                if(lazer[i].getStatus()){
+                    canvas.drawBitmap(lazer[i].getBitmap(), lazer[i].getX(), lazer[i].getY(), paint);
+                }
+            }
             for(int i = 0; i < block.length; i++) {
                 if (block[i].getStatus()) {
                     canvas.drawBitmap(block[i].getBitmap(), block[i].getX(), block[i].getY(), paint);
