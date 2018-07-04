@@ -7,15 +7,11 @@ import android.graphics.Color;
 import android.graphics.RectF;
 import java.util.Random;
 
-public class PowerupSizeBig {
+public class PowerupController {
 
     private RectF rect;
 
-    private Bitmap bitmap_1;
-    private Bitmap bitmap_2;
-    private Bitmap bitmap_3;
-    private Bitmap bitmap_4;
-    private int cnt = 0;
+    private Bitmap bitmap;
 
     private float length;
     private float height;
@@ -32,42 +28,25 @@ public class PowerupSizeBig {
 
 
 
-    public PowerupSizeBig(Context context, int screenX) {
+    public PowerupController(Context context, int screenX) {
 
         rect = new RectF();
 
-        length = screenX / 25;
+        length = screenX / 10;
         height = length;
 
-        bitmap_1 = BitmapFactory.decodeResource(context.getResources(), R.drawable.hantel);
-        bitmap_1 = Bitmap.createScaledBitmap(bitmap_1,
+        bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.pult);
+
+        bitmap = Bitmap.createScaledBitmap(bitmap,
                 (int) (length),
                 (int) (height),
                 false);
-        bitmap_2 = BitmapFactory.decodeResource(context.getResources(), R.drawable.hantel);
-        bitmap_2 = Bitmap.createScaledBitmap(bitmap_2,
-                (int) (length*2),
-                (int) (height*2),
-                false);
-        bitmap_3 = BitmapFactory.decodeResource(context.getResources(), R.drawable.hantel);
-        bitmap_3 = Bitmap.createScaledBitmap(bitmap_3,
-                (int) (length*3),
-                (int) (height*3),
-                false);
-        bitmap_4 = BitmapFactory.decodeResource(context.getResources(), R.drawable.hantel);
-        bitmap_4 = Bitmap.createScaledBitmap(bitmap_4,
-                (int) (length*4),
-                (int) (height*4),
-                false);
-        bitmap_1 = makeTransparent(bitmap_1);
-        bitmap_2 = makeTransparent(bitmap_2);
-        bitmap_3 = makeTransparent(bitmap_3);
-        bitmap_4 = makeTransparent(bitmap_4);
+        bitmap = makeTransparent(bitmap);
 
     }
     public boolean init(){
         if(!isActive){
-            randomNumber = generator.nextInt((Math.round(length) * 5) - Math.round(length));
+            randomNumber = generator.nextInt((Math.round(length) * 10) - Math.round(length));
             x = randomNumber;
             y = 0;
             isActive = true;
@@ -78,18 +57,7 @@ public class PowerupSizeBig {
 
     public RectF getRect() {return rect;}
 
-    public Bitmap getBitmap() {
-        if(cnt < 10) {
-            return bitmap_1;
-        }else if(cnt < 20)
-        {
-            return bitmap_2;
-        }else if(cnt < 30){
-            return bitmap_3;
-        }else{
-            return bitmap_4;
-        }
-    }
+    public Bitmap getBitmap() {return bitmap;}
 
     public float getX() {return x;}
 
@@ -99,15 +67,11 @@ public class PowerupSizeBig {
 
     public void update(long fps) {
         y = y + speed / fps;
-        if(cnt < 40){
-            cnt++;
-        }else{
-            cnt=0;
-        }
+
         rect.top = y;
-        rect.bottom = y + (height * 4);
+        rect.bottom = y + height;
         rect.left = x;
-        rect.right = x + (length * 4);
+        rect.right = x + length;
     }
 
     public void setInactive(){isActive = false;}
