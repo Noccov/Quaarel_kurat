@@ -23,11 +23,13 @@ public class Boss {
     private int height;
 
     private int health = 20;
+    private float maxHealth = 20;
 
     private boolean isActive;
     private boolean charge = false;
     private boolean chargeUp = false;
-    private boolean alreadyCharged = false;
+    //private boolean alreadyCharged = false;
+    private int nextCharge = 60;
 
     private final int LEFT = 1;
     private final int RIGHT = 2;
@@ -70,12 +72,14 @@ public class Boss {
         if(!isActive){
             charge = false;
             chargeUp = false;
-            alreadyCharged = false;
+            //alreadyCharged = false;
+            nextCharge = 60;
             isHit = false;
             bossMoving = 0;
             cnt = 0;
             invincible = true;
             health = initHealth;
+            maxHealth = initHealth;
             x = screenX / 2 - (width/2);
             y = -height;
             isActive = true;
@@ -94,6 +98,7 @@ public class Boss {
                 invincible = false;
                 x = x + speed / fps;
             } else {
+                invincible = false;
                 x = x - speed / fps;
             }
         }else{
@@ -108,6 +113,7 @@ public class Boss {
             if(y < height/2){
                 charge = false;
                 chargeUp = false;
+                invincible = true;
             }
         }
         rect.left = x;
@@ -135,9 +141,11 @@ public class Boss {
     public void gotHit(int strength){
         if(!invincible) {
             health = health - strength;
-            if(!charge && health < 10 && !alreadyCharged){
+            if(!charge && health < ((maxHealth / 100) * nextCharge)){
                 charge = true;
-                alreadyCharged = true;
+                //alreadyCharged = true;
+                invincible = true;
+                nextCharge = nextCharge - 20;
             }
             isHit = true;
             cnt = 0;
