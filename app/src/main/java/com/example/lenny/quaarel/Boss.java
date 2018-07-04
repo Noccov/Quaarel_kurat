@@ -31,6 +31,7 @@ public class Boss {
 
     private final int LEFT = 1;
     private final int RIGHT = 2;
+    private final int NONE = 0;
 
     private int bossMoving = 0;
     private boolean invincible = true;
@@ -141,6 +142,11 @@ public class Boss {
             isHit = true;
             cnt = 0;
         }
+    }
+
+    public void quaarelMangib(){
+
+
     }
 
     public float getX(){return x;}
