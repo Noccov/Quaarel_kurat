@@ -4,11 +4,13 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.graphics.RectF;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
 
 import java.util.Random;
 
@@ -75,6 +77,7 @@ public class QuaarelView extends SurfaceView implements Runnable{
     private int blockHealth = 0;
     private boolean godMode;
     private int godModeEnd = 0;
+    boolean buttonClicked = false;
 
     //For movement
     private float moveX;
@@ -516,12 +519,12 @@ public class QuaarelView extends SurfaceView implements Runnable{
 
 
     @Override
-    public boolean onTouchEvent(MotionEvent motionEvent){
+    public boolean onTouchEvent(MotionEvent motionEvent) {
 
-        switch (motionEvent.getAction() & MotionEvent.ACTION_MASK){
+        switch (motionEvent.getAction() & MotionEvent.ACTION_MASK) {
 
 
-            /*case MotionEvent.PointerCoords:
+            /*case MotionEvent.ACTION_UP:
                 if ((MotionEvent.getX() > screenX - (screenX / 10)) && (MotionEvent.getX() < screenX) && (MotionEvent.getY()> (screenY / 11)) && (MotionEvent.getY() < ((screenY / 11) - (screenX / 10))))
                 {
                     pause();
@@ -530,35 +533,43 @@ public class QuaarelView extends SurfaceView implements Runnable{
 
             case MotionEvent.ACTION_DOWN:
 
-                    paused = false;
-                    moveX = motionEvent.getX();
-                    break;
+                paused = false;
+                moveX = motionEvent.getX();
+                if ((motionEvent.getX() > screenX - (screenX / 10)) && (motionEvent.getX() < screenX) && (motionEvent.getY() > (screenY / 11)) && (motionEvent.getY() < ((screenY / 11) + (screenX / 10))))
+                {
 
+                    if (!buttonClicked){
+                        pause();
+                    }
+                    else{
+                        resume();
+                    }
+                    buttonClicked = !buttonClicked;
+                }
+                break;
 
             case MotionEvent.ACTION_MOVE:
-                if((hand.getX() > 0 && moveX > motionEvent.getX()) || (quaarel.getX() < screenX - (quaarel.getLength() + hand.getLength()) && moveX < motionEvent.getX()) ){
+                if ((hand.getX() > 0 && moveX > motionEvent.getX()) || (quaarel.getX() < screenX - (quaarel.getLength() + hand.getLength()) && moveX < motionEvent.getX())) {
                     quaarel.setX(quaarel.getX() + motionEvent.getX() - moveX);
                 }
-                if(motionEvent.getX() > moveX && !moveRight){
-                    moveRightPos = quaarel.getX() + (screenX/8);
+                if (motionEvent.getX() > moveX && !moveRight) {
+                    moveRightPos = quaarel.getX() + (screenX / 8);
                     moveRight = true;
-                }else if(motionEvent.getX() < moveX && moveRight){
-                    moveLeftPos = quaarel.getX() - (screenX/8);
+                } else if (motionEvent.getX() < moveX && moveRight) {
+                    moveLeftPos = quaarel.getX() - (screenX / 8);
                     moveRight = false;
                 }
-                if(quaarel.getX() > moveRightPos && moveRight){
+                if (quaarel.getX() > moveRightPos && moveRight) {
                     quaarel.setRight(true);
                     hand.setRight(true);
-                }else if(quaarel.getX() < moveLeftPos && !moveRight){
+                } else if (quaarel.getX() < moveLeftPos && !moveRight) {
                     quaarel.setRight(false);
                     hand.setRight(false);
                 }
                 moveX = motionEvent.getX();
                 break;
-
         }
         return true;
     }
-
 }
 
