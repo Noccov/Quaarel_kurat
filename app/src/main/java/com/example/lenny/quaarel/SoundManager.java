@@ -52,6 +52,9 @@ public class SoundManager {
     public void stopMusic(){
         mp.stop();
     }
+    public void pauseMusic(){
+        mp.pause();
+    }
     public void hideMusic() {
         //ourSounds.stop(bgStream);
         mp.setVolume(0,0);

@@ -78,6 +78,7 @@ public class QuaarelView extends SurfaceView implements Runnable{
     private boolean godMode;
     private int godModeEnd = 0;
     boolean buttonClicked = false;
+    boolean musicPlaying = false;
 
     //For movement
     private float moveX;
@@ -119,6 +120,7 @@ public class QuaarelView extends SurfaceView implements Runnable{
         godMode = false;
         godModeEnd = 0;
         gameSpeed = 1;
+        musicPlaying = false;
 
         //Create objects
         quaarel = new Quaarel(context, screenX, screenY);
@@ -305,7 +307,9 @@ public class QuaarelView extends SurfaceView implements Runnable{
                 }
                 if(boss.getStatus() && RectF.intersects(rock[i].getRect(), boss.getRect())){
                     boss.gotHit(strength);
-                    bossHealthBar.gotHit(strength);
+                    if(!boss.getInvincible()) {
+                        bossHealthBar.gotHit(strength);
+                    }
                     rock[i].setInActive();
                 }
             }
@@ -327,7 +331,7 @@ public class QuaarelView extends SurfaceView implements Runnable{
 
     private void updateBossFight(){
         if(bossFight){
-            boss.update(fps, screenX);
+            boss.update(fps, screenX, screenY);
             if(boss.getHealth() < 1){
                 bossFight = false;
                 bossTime = score + 1000;
@@ -338,8 +342,13 @@ public class QuaarelView extends SurfaceView implements Runnable{
                 soundManager.continueMusic();
                 gameSpeed = gameSpeed + (float) (0.2/gameSpeed);
             }
-            if(!book.getStatus() && score > 350){
+            if(!book.getStatus() && score > 350 && !boss.getCharge()){
                 book.init(boss.getX(), boss.getY());
+            }
+            if(RectF.intersects(boss.getRect(), quaarel.getRect()) && !godMode){
+                lives--;
+                godMode = true;
+                godModeEnd = score + 100;
             }
         }
 
@@ -502,7 +511,7 @@ public class QuaarelView extends SurfaceView implements Runnable{
         }catch (InterruptedException e){
             Log.e("Error:", "joining thread");
         }
-        soundManager.stopMusic();
+        soundManager.pauseMusic();
         soundManager.stopBoss();
     }
 
@@ -511,7 +520,7 @@ public class QuaarelView extends SurfaceView implements Runnable{
         //paused = false;
         gamethread = new Thread(this);
         gamethread.start();
-        soundManager.playMusic();
+        //soundManager.playMusic();
         if (bossFight) {
             soundManager.playBoss();
         }
@@ -534,6 +543,10 @@ public class QuaarelView extends SurfaceView implements Runnable{
             case MotionEvent.ACTION_DOWN:
 
                 paused = false;
+                if(!musicPlaying){
+                    soundManager.playMusic();
+                }
+                //resume();
                 moveX = motionEvent.getX();
                 if ((motionEvent.getX() > screenX - (screenX / 10)) && (motionEvent.getX() < screenX) && (motionEvent.getY() > (screenY / 11)) && (motionEvent.getY() < ((screenY / 11) + (screenX / 10))))
                 {
