@@ -59,6 +59,7 @@ public class QuaarelView extends SurfaceView implements Runnable{
     private PowerupCloud powerupCloud;
     private PowerupSizeBig powerupSizeBig;
     private PowerupGodMode powerupGodMode;
+    private PowerupController powerupController;
     private Cloud cloud;
     private int speedEnd;
     private int speedCoef;
@@ -135,6 +136,7 @@ public class QuaarelView extends SurfaceView implements Runnable{
         powerupGodMode = new PowerupGodMode(context, screenX);
         cloud = new Cloud(context, screenX);
         pauseButton = new PauseButton(context, screenX);
+        powerupController = new PowerupController(context, screenX);
 
         for(int i = 0; i < block.length; i++) {
             block[i] = new Block(context, screenX);
@@ -249,7 +251,14 @@ public class QuaarelView extends SurfaceView implements Runnable{
                 powerupGodMode.init();
             }
         }
-
+        if (bossFight){
+            if(score % 100 == 0){
+                randomNumber = generator.nextInt(10);
+                if(randomNumber > 5){
+                    powerupController.init();
+                }
+            }
+        }
 
         updateBlocks();
         updateRocks();
@@ -441,6 +450,18 @@ public class QuaarelView extends SurfaceView implements Runnable{
                 powerupGodMode.setInactive();
             }
         }
+
+        //Controller
+        if(powerupController.getStatus()){
+            powerupController.update(fps);
+            if(RectF.intersects(powerupController.getRect(), quaarel.getRect()) || RectF.intersects(powerupController.getRect(), hand.getRect())){
+                //???????????????????????????????
+                powerupController.setInactive();
+            }
+            if(powerupController.getImpactPointY() > screenY){
+                powerupController.setInactive();
+            }
+        }
     }
     private void draw(){
 
@@ -465,6 +486,7 @@ public class QuaarelView extends SurfaceView implements Runnable{
             if(powerupCloud.getStatus()) {canvas.drawBitmap(powerupCloud.getBitmap(), powerupCloud.getX(), powerupCloud.getY(), paint);}
             if(powerupSizeBig.getStatus()) {canvas.drawBitmap(powerupSizeBig.getBitmap(), powerupSizeBig.getX(), powerupSizeBig.getY(), paint);}
             if(powerupGodMode.getStatus()) {canvas.drawBitmap(powerupGodMode.getBitmap(), powerupGodMode.getX(), powerupGodMode.getY(), paint);}
+            if(powerupController.getStatus()) {canvas.drawBitmap(powerupController.getBitmap(), powerupController.getX(), powerupController.getY(), paint);}
             for(int i = 0; i < block.length; i++) {
                 if (block[i].getStatus()) {
                     canvas.drawBitmap(block[i].getBitmap(), block[i].getX(), block[i].getY(), paint);
@@ -531,14 +553,6 @@ public class QuaarelView extends SurfaceView implements Runnable{
     public boolean onTouchEvent(MotionEvent motionEvent) {
 
         switch (motionEvent.getAction() & MotionEvent.ACTION_MASK) {
-
-
-            /*case MotionEvent.ACTION_UP:
-                if ((MotionEvent.getX() > screenX - (screenX / 10)) && (MotionEvent.getX() < screenX) && (MotionEvent.getY()> (screenY / 11)) && (MotionEvent.getY() < ((screenY / 11) - (screenX / 10))))
-                {
-                    pause();
-                    break;
-                }*/
 
             case MotionEvent.ACTION_DOWN:
 
