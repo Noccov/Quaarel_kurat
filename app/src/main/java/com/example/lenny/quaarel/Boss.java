@@ -85,6 +85,7 @@ public class Boss {
             nextCharge = 60;
             isHit = false;
             bossMoving = 0;
+            rage = false;
             cnt = 0;
             invincible = true;
             health = initHealth;

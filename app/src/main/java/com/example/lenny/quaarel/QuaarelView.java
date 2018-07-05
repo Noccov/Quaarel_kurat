@@ -47,6 +47,8 @@ public class QuaarelView extends SurfaceView implements Runnable{
     private Rock[] rock = new Rock[50];
     private Lazer[] lazer = new Lazer[10];
     private Book book;
+    private PowPow powPow;
+    private int powEnd = 0;
     private boolean newRow;
     private boolean newRock;
     private boolean bossFight = false;
@@ -124,6 +126,7 @@ public class QuaarelView extends SurfaceView implements Runnable{
         godModeEnd = 0;
         gameSpeed = 1;
         musicPlaying = false;
+        powEnd = 0;
 
         //Create objects
         quaarel = new Quaarel(context, screenX, screenY);
@@ -139,6 +142,7 @@ public class QuaarelView extends SurfaceView implements Runnable{
         cloud = new Cloud(context, screenX);
         pauseButton = new PauseButton(context, screenX);
         powerupController = new PowerupController(context, screenX);
+        powPow = new PowPow(context, screenX);
 
         for(int i = 0; i < lazer.length; i++) {
             lazer[i] = new Lazer(context, screenX);
@@ -322,6 +326,8 @@ public class QuaarelView extends SurfaceView implements Runnable{
                 if(boss.getStatus() && RectF.intersects(rock[i].getRect(), boss.getRect())){
                     boss.gotHit(strength);
                     if(!boss.getInvincible()) {
+                        powPow.init(rock[i].getX(), rock[i].getY() - (boss.getHeight()/4));
+                        powEnd = score + 10;
                         bossHealthBar.gotHit(strength);
                     }
                     rock[i].setInActive();
@@ -378,7 +384,7 @@ public class QuaarelView extends SurfaceView implements Runnable{
             }
         }
 
-        if(boss.getRage() && score % 10 == 0){
+        if(boss.getRage() && score % 10 == 0 && boss.getStatus()){
             lazer[lazerCnt].init(boss.getX() + (boss.getHeight()/3), boss.getY() + (boss.getHeight()/2));
             lazerCnt++;
         }
@@ -405,6 +411,9 @@ public class QuaarelView extends SurfaceView implements Runnable{
 
         if(book.getImpactPointY() > screenY){
             book.setInActive();
+        }
+        if(powEnd < score && powPow.getStatus()){
+            powPow.setInActive();
         }
     }
 
@@ -510,6 +519,7 @@ public class QuaarelView extends SurfaceView implements Runnable{
             if(boss.getStatus()) {canvas.drawBitmap(boss.getBitmap(), boss.getX(), boss.getY(), paint);}
             if(bossHealthBar.getStatus()) {canvas.drawBitmap(bossHealthBar.getBackBitmap(), bossHealthBar.getX(), bossHealthBar.getY(), paint);}
             if(bossHealthBar.getStatus()) {canvas.drawBitmap(bossHealthBar.getFrontBitmap(), bossHealthBar.getX(), bossHealthBar.getY(), paint);}
+            if(powPow.getStatus()) {canvas.drawBitmap(powPow.getBitmap(), powPow.getX(), powPow.getY(), paint);}
             if(book.getStatus()) {canvas.drawBitmap(book.getBitmap(), book.getX(), book.getY(), paint);}
             if(powerupHealth.getStatus()) {canvas.drawBitmap(powerupHealth.getBitmap(), powerupHealth.getX(), powerupHealth.getY(), paint);}
             if(powerupSpeed.getStatus()) {canvas.drawBitmap(powerupSpeed.getBitmap(), powerupSpeed.getX(), powerupSpeed.getY(), paint);}
