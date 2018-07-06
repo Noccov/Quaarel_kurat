@@ -6,6 +6,8 @@ import android.media.SoundPool;
 import android.media.SoundPool.OnLoadCompleteListener;
 import android.content.Context;
 
+import java.io.IOException;
+
 /**
  * Created by garyh on 11/07/2015.
  */
@@ -56,12 +58,18 @@ public class SoundManager {
 
 
     public void playMusic() {
-         //bgStream = ourSounds.play(bgMusic, 0.9f, 0.9f, 1, 1, 1);
         mp.start();
     }
 
     public void stopMusic(){
         mp.stop();
+    }
+    public void prepareMusic(){
+        try {
+            mp.prepare();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
     public void pauseMusic(){
         mp.pause();
@@ -72,6 +80,10 @@ public class SoundManager {
     }
     public void continueMusic(){
         mp.setVolume(1,1);
+    }
+
+    public void setMusicSpeed(float newSpeed){
+        mp.setPlaybackParams(mp.getPlaybackParams().setSpeed(newSpeed));
     }
 
     public void playBoss() {
