@@ -13,6 +13,10 @@ public class SoundManager {
 
     private  SoundPool ourSounds;
     private int bossMusic;
+    private int loseHealth;
+    private int die;
+    private int loseHealthStream;
+    private int dieStream;
     private int bgMusic;
     private int bgStream;
     private int bossStream;
@@ -27,7 +31,7 @@ public class SoundManager {
                 .build();
 
         ourSounds = new SoundPool.Builder()
-                .setMaxStreams(1)
+                .setMaxStreams(3)
                 .setAudioAttributes(audioAttributes)
                 .build();
        // ourSounds.setOnLoadCompleteListener(new OnLoadCompleteListener() {
@@ -35,7 +39,10 @@ public class SoundManager {
        //     public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
        //     }
        // });
-        bossMusic = ourSounds.load(context, R.raw.bossfight, 1);
+        bossMusic = ourSounds.load(context, R.raw.bossfight, 2);
+        loseHealth = ourSounds.load(context, R.raw.quaarel_kurat_audio, 1);
+        die = ourSounds.load(context, R.raw.dying_final_2, 1);
+
         //bgMusic = ourSounds.load(context, R.raw.kindakirjad,3);
 
 
@@ -70,5 +77,9 @@ public class SoundManager {
     public void stopBoss() {
         ourSounds.stop(bossStream);
     }
+
+    public void playLoseHealth(){loseHealthStream = ourSounds.play(loseHealth, 0.9f, 0.9f, 1, 0, 1);}
+
+    public void playDie(){dieStream = ourSounds.play(die, 0.9f, 0.9f, 1, 0, 1);}
 
 }

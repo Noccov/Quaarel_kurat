@@ -192,6 +192,7 @@ public class QuaarelView extends SurfaceView implements Runnable{
             paused = true;
             soundManager.stopMusic();
             soundManager.stopBoss();
+            soundManager.playDie();
             prepareLevel();
         }
 
@@ -287,6 +288,9 @@ public class QuaarelView extends SurfaceView implements Runnable{
                     if(!godMode) {
                         lives--;
                         block[i].setInActive();
+                        if (lives != 0) {
+                            soundManager.playLoseHealth();
+                        }
                         godMode = true;
                         godModeEnd = score + 100;
                     }
@@ -367,6 +371,9 @@ public class QuaarelView extends SurfaceView implements Runnable{
             }
             if(RectF.intersects(boss.getRect(), quaarel.getRect()) && !godMode){
                 lives--;
+                if (lives != 0) {
+                    soundManager.playLoseHealth();
+                }
                 godMode = true;
                 godModeEnd = score + 100;
             }
@@ -378,6 +385,9 @@ public class QuaarelView extends SurfaceView implements Runnable{
                 if(!godMode) {
                     lives--;
                     book.setInActive();
+                    if (lives != 0) {
+                        soundManager.playLoseHealth();
+                    }
                     godMode = true;
                     godModeEnd = score + 100;
                 }
@@ -399,6 +409,9 @@ public class QuaarelView extends SurfaceView implements Runnable{
                 if(RectF.intersects(quaarel.getRect(), lazer[i].getRect()) && !godMode){
                     lives--;
                     lazer[i].setInActive();
+                    if (lives != 0) {
+                        soundManager.playLoseHealth();
+                    }
                     godMode = true;
                     godModeEnd = score + 100;
                 }
