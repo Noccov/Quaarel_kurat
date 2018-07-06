@@ -333,6 +333,7 @@ public class QuaarelView extends SurfaceView implements Runnable{
                         powPow.init(rock[i].getX(), rock[i].getY() - (boss.getHeight()/4));
                         powEnd = score + 10;
                         bossHealthBar.gotHit(strength);
+                        soundManager.playHit();
                     }
                     rock[i].setInActive();
                 }
@@ -396,6 +397,7 @@ public class QuaarelView extends SurfaceView implements Runnable{
 
         if(boss.getRage() && score % 10 == 0 && boss.getStatus()){
             lazer[lazerCnt].init(boss.getX() + (boss.getHeight()/3), boss.getY() + (boss.getHeight()/2));
+            soundManager.playBlaster();
             lazerCnt++;
         }
         if(lazerCnt == 5){

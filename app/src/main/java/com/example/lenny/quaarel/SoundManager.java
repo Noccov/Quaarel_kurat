@@ -15,8 +15,12 @@ public class SoundManager {
     private int bossMusic;
     private int loseHealth;
     private int die;
+    private int on_hit;
+    private int blaster;
     private int loseHealthStream;
     private int dieStream;
+    private int blasterStream;
+    private int onhitStream;
     private int bgMusic;
     private int bgStream;
     private int bossStream;
@@ -42,6 +46,8 @@ public class SoundManager {
         bossMusic = ourSounds.load(context, R.raw.bossfight, 2);
         loseHealth = ourSounds.load(context, R.raw.quaarel_kurat_audio, 1);
         die = ourSounds.load(context, R.raw.dying_final_2, 1);
+        on_hit = ourSounds.load(context, R.raw.on_hit, 1);
+        blaster = ourSounds.load(context, R.raw.blaster_sound_final, 1);
 
         //bgMusic = ourSounds.load(context, R.raw.kindakirjad,3);
 
@@ -81,5 +87,9 @@ public class SoundManager {
     public void playLoseHealth(){loseHealthStream = ourSounds.play(loseHealth, 0.9f, 0.9f, 1, 0, 1);}
 
     public void playDie(){dieStream = ourSounds.play(die, 0.9f, 0.9f, 1, 0, 1);}
+
+    public void playBlaster(){blasterStream = ourSounds.play(blaster, 0.9f, 0.9f,1, 0, 1);}
+
+    public void playHit(){onhitStream = ourSounds.play(on_hit, 0.9f, 0.9f, 1, 0 , 1);}
 
 }
