@@ -190,7 +190,9 @@ public class QuaarelView extends SurfaceView implements Runnable{
         //If Quaarel is dead
         if (lives < 1) {
             paused = true;
-            soundManager.stopMusic();
+            //soundManager.stopMusic();
+            soundManager.pauseMusic();
+            musicPlaying = false;
             soundManager.stopBoss();
             soundManager.playDie();
             prepareLevel();
@@ -594,6 +596,7 @@ public class QuaarelView extends SurfaceView implements Runnable{
             Log.e("Error:", "joining thread");
         }
         soundManager.pauseMusic();
+        musicPlaying = false;
         soundManager.stopBoss();
     }
 
