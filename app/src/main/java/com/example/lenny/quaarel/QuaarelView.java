@@ -71,6 +71,8 @@ public class QuaarelView extends SurfaceView implements Runnable{
 
     //Sound
     private SoundManager soundManager;
+    boolean musicPlaying = false;
+    boolean musicPrepared = false;
 
     //Game variables
     private int lives = 3;
@@ -83,7 +85,6 @@ public class QuaarelView extends SurfaceView implements Runnable{
     private boolean godMode;
     private int godModeEnd = 0;
     boolean buttonClicked = false;
-    boolean musicPlaying = false;
 
     //For movement
     private float moveX;
@@ -126,7 +127,10 @@ public class QuaarelView extends SurfaceView implements Runnable{
         godModeEnd = 0;
         gameSpeed = 1;
         musicPlaying = false;
+        //musicPrepared = false;
         powEnd = 0;
+        soundManager.setMusicSpeed((float) 1.0);
+        soundManager.stopMusic();
 
         //Create objects
         quaarel = new Quaarel(context, screenX, screenY);
@@ -190,9 +194,8 @@ public class QuaarelView extends SurfaceView implements Runnable{
         //If Quaarel is dead
         if (lives < 1) {
             paused = true;
-            soundManager.setMusicSpeed((float) 1.0);
-            soundManager.pauseMusic();
-            musicPlaying = false;
+            //soundManager.stopMusic();
+            //musicPlaying = false;
             soundManager.stopBoss();
             soundManager.playDie();
             prepareLevel();
@@ -330,8 +333,8 @@ public class QuaarelView extends SurfaceView implements Runnable{
                     }
                 }
                 if(boss.getStatus() && RectF.intersects(rock[i].getRect(), boss.getRect())){
-                    boss.gotHit(strength);
-                    if(!boss.getInvincible()) {
+                   if(!boss.getInvincible()) {
+                        boss.gotHit(strength);
                         powPow.init(rock[i].getX(), rock[i].getY() - (boss.getHeight()/4));
                         powEnd = score + 10;
                         bossHealthBar.gotHit(strength);
@@ -623,8 +626,10 @@ public class QuaarelView extends SurfaceView implements Runnable{
             case MotionEvent.ACTION_DOWN:
 
                 paused = false;
-                if(!musicPlaying){
+                if(!musicPlaying && !musicPrepared){
                     soundManager.playMusic();
+                } else if(!musicPlaying){
+                    soundManager.prepareMusic();
                 }
                 //resume();
                 moveX = motionEvent.getX();

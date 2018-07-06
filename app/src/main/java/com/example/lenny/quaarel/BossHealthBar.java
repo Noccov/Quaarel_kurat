@@ -100,7 +100,7 @@ public class BossHealthBar {
         health = health - strength;
 
         if (health >= strength) {
-            frontLength = backLength / initHealth * health;
+            frontLength = (float) Math.floor(backLength / initHealth * health);
         }
         bitmap_front = Bitmap.createScaledBitmap(bitmap_front,
                 (int) (frontLength),

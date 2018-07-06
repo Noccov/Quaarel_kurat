@@ -50,8 +50,6 @@ public class SoundManager {
         blaster = ourSounds.load(context, R.raw.blaster_sound_final, 2);
 
         //bgMusic = ourSounds.load(context, R.raw.kindakirjad,3);
-
-
         mp = MediaPlayer.create(context, R.raw.kindakirjad);
         mp.setLooping(true);
     }
