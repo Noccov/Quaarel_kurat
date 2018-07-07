@@ -59,16 +59,7 @@ public class SoundManager {
         mp.start();
     }
 
-    public void stopMusic(){
-        mp.stop();
-    }
-    public void prepareMusic(){
-        try {
-            mp.prepare();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+
     public void pauseMusic(){
         mp.pause();
     }

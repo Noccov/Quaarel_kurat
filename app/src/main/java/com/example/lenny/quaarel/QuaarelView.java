@@ -72,7 +72,6 @@ public class QuaarelView extends SurfaceView implements Runnable{
     //Sound
     private SoundManager soundManager;
     boolean musicPlaying = false;
-    boolean musicPrepared = false;
 
     //Game variables
     private int lives = 3;
@@ -126,11 +125,7 @@ public class QuaarelView extends SurfaceView implements Runnable{
         godMode = false;
         godModeEnd = 0;
         gameSpeed = 1;
-        musicPlaying = false;
-        //musicPrepared = false;
         powEnd = 0;
-        soundManager.setMusicSpeed((float) 1.0);
-        soundManager.stopMusic();
 
         //Create objects
         quaarel = new Quaarel(context, screenX, screenY);
@@ -194,8 +189,8 @@ public class QuaarelView extends SurfaceView implements Runnable{
         //If Quaarel is dead
         if (lives < 1) {
             paused = true;
-            //soundManager.stopMusic();
-            //musicPlaying = false;
+            soundManager.pauseMusic();
+            musicPlaying = false;
             soundManager.stopBoss();
             soundManager.playDie();
             prepareLevel();
@@ -599,8 +594,6 @@ public class QuaarelView extends SurfaceView implements Runnable{
         }catch (InterruptedException e){
             Log.e("Error:", "joining thread");
         }
-        soundManager.pauseMusic();
-        //soundManager.stopMusic();
         musicPlaying = false;
         soundManager.stopBoss();
     }
@@ -610,8 +603,6 @@ public class QuaarelView extends SurfaceView implements Runnable{
         //paused = false;
         gamethread = new Thread(this);
         gamethread.start();
-        musicPlaying = true;
-        soundManager.playMusic();
         if (bossFight) {
             soundManager.playBoss();
         }
@@ -626,10 +617,11 @@ public class QuaarelView extends SurfaceView implements Runnable{
             case MotionEvent.ACTION_DOWN:
 
                 paused = false;
-                if(!musicPlaying && !musicPrepared){
+                if(!musicPlaying){
                     soundManager.playMusic();
-                } else if(!musicPlaying){
-                    soundManager.prepareMusic();
+                    soundManager.continueMusic();
+                    soundManager.setMusicSpeed((float) 1.0);
+                    musicPlaying = true;
                 }
                 //resume();
                 moveX = motionEvent.getX();
