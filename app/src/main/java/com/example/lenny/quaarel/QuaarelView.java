@@ -120,7 +120,7 @@ public class QuaarelView extends SurfaceView implements Runnable{
         rockCnt = 0;
         speedCoef = 1;
         speedEnd = 0;
-        bossTime = 750;
+        bossTime = 2500;
         strength = 1;
         godMode = false;
         godModeEnd = 0;
@@ -207,7 +207,7 @@ public class QuaarelView extends SurfaceView implements Runnable{
         }else {cnt++;}
 
         //Every 2 seconds make new row of blocks
-        if(second % 4 == 0 && cnt == 0){
+        if(second % 3 == 0 && cnt == 0){
             newRow = true;
             if(RowCnt < 2){
                 RowCnt++;
@@ -247,8 +247,8 @@ public class QuaarelView extends SurfaceView implements Runnable{
         }
 
         //initialize powerup
-        if(score % 200 == 0 && score > 10){
-            randomNumber = generator.nextInt(50);
+        if(score % 400 == 0 && score > 10){
+            randomNumber = generator.nextInt(10);
             if(randomNumber < 2) {
                 powerupHealth.init();
             }else if(randomNumber < 4){
@@ -359,7 +359,7 @@ public class QuaarelView extends SurfaceView implements Runnable{
             boss.update(fps, screenX, screenY);
             if(boss.getHealth() < 1){
                 bossFight = false;
-                bossTime = score + 1000;
+                bossTime = score + 4000;
                 boss.setInActive();
                 bossHealth = bossHealth + 25;
                 bossHealthBar.setInactive();
@@ -498,7 +498,7 @@ public class QuaarelView extends SurfaceView implements Runnable{
             powerupGodMode.update(fps);
             if(RectF.intersects(powerupGodMode.getRect(), quaarel.getRect()) || RectF.intersects(powerupGodMode.getRect(), hand.getRect())){
                 godMode = true;
-                godModeEnd = score + 300;
+                godModeEnd = score + 400;
                 powerupGodMode.setInactive();
             }
             if(powerupGodMode.getImpactPointY() > screenY){
@@ -629,9 +629,11 @@ public class QuaarelView extends SurfaceView implements Runnable{
                 {
 
                     if (!buttonClicked){
+                        soundManager.pauseMusic();
                         pause();
                     }
                     else{
+                        soundManager.playMusic();
                         resume();
                     }
                     buttonClicked = !buttonClicked;
