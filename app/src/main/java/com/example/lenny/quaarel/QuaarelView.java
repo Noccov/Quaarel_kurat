@@ -455,6 +455,7 @@ public class QuaarelView extends SurfaceView implements Runnable{
         if(powerupSpeed.getStatus()){
             powerupSpeed.update(fps);
             if(RectF.intersects(powerupSpeed.getRect(), quaarel.getRect()) || RectF.intersects(powerupSpeed.getRect(), hand.getRect())){
+                soundManager.playSpeed();
                 speedEnd = score + 500;
                 powerupSpeed.setInactive();
             }
@@ -489,6 +490,7 @@ public class QuaarelView extends SurfaceView implements Runnable{
                 for(int i = 0; i < rock.length; i++){
                     rock[i].setSize((float) (1 + (0.4/strength)));
                 }
+                soundManager.playBooster();
                 hand.setSize((float) (1 + (0.2/strength)));
                 powerupSizeBig.setInactive();
                 strength++;
@@ -502,6 +504,7 @@ public class QuaarelView extends SurfaceView implements Runnable{
         if(powerupGodMode.getStatus()){
             powerupGodMode.update(fps);
             if(RectF.intersects(powerupGodMode.getRect(), quaarel.getRect()) || RectF.intersects(powerupGodMode.getRect(), hand.getRect())){
+                soundManager.playGodMode();
                 godMode = true;
                 godModeEnd = score + 400;
                 powerupGodMode.setInactive();

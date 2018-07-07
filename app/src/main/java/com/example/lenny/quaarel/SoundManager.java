@@ -19,11 +19,17 @@ public class SoundManager {
     private int die;
     private int on_hit;
     private int blaster;
+    private int speed;
+    private int godMode;
+    private int booster;
     private int loseHealthStream;
     private int dieStream;
     private int blasterStream;
     private int onhitStream;
     private int bossStream;
+    private int speedStream;
+    private int godModeStream;
+    private int boosterStream;
     private MediaPlayer mp;
 
 
@@ -48,6 +54,9 @@ public class SoundManager {
         die = ourSounds.load(context, R.raw.dying_final_2, 2);
         on_hit = ourSounds.load(context, R.raw.on_hit, 2);
         blaster = ourSounds.load(context, R.raw.blaster_sound_final, 2);
+        speed = ourSounds.load(context, R.raw.speed, 2);
+        godMode = ourSounds.load(context, R.raw.godlike, 2);
+        booster = ourSounds.load(context, R.raw.booster,2);
 
         //bgMusic = ourSounds.load(context, R.raw.kindakirjad,3);
         mp = MediaPlayer.create(context, R.raw.kindakirjad);
@@ -90,5 +99,11 @@ public class SoundManager {
     public void playBlaster(){blasterStream = ourSounds.play(blaster, 0.9f, 0.9f,1, 0, 1);}
 
     public void playHit(){onhitStream = ourSounds.play(on_hit, 0.9f, 0.9f, 1, 0 , 1);}
+
+    public void playSpeed(){speedStream = ourSounds.play(speed, 0.9f, 0.9f, 1,0,1);}
+
+    public void playGodMode(){godModeStream = ourSounds.play(godMode, 0.9f,0.9f,1,0,1);}
+
+    public void playBooster(){boosterStream = ourSounds.play(booster,0.9f,0.9f,1,0,1);}
 
 }
