@@ -42,7 +42,7 @@ public class QuaarelView extends SurfaceView implements Runnable{
     private Hand hand;
     private Boss boss;
     private BossHealthBar bossHealthBar;
-    private int bossHealth = 25;
+    private int bossHealth = 50;
     private Block[] block = new Block[25];
     private Rock[] rock = new Rock[50];
     private Lazer[] lazer = new Lazer[10];
@@ -207,7 +207,8 @@ public class QuaarelView extends SurfaceView implements Runnable{
         }else {cnt++;}
 
         //Every 2 seconds make new row of blocks
-        if(second % 3 == 0 && cnt == 0){
+        //if(second % 2 == 0 && cnt == 0){
+          if(score % 130 == 0 && score > 10){
             newRow = true;
             if(RowCnt < 2){
                 RowCnt++;
@@ -306,7 +307,11 @@ public class QuaarelView extends SurfaceView implements Runnable{
             randomNumber = generator.nextInt(7);
             for (int i = 0; i < 7; i++) {
                 if (newRow) {
-                    blockHealth = generator.nextInt((strength * 5)) + 1;
+                    if(i == randomNumber + 1 || i == randomNumber - 1) {
+                        blockHealth = generator.nextInt((strength * 2)) + 1;
+                    }else{
+                        blockHealth = generator.nextInt((strength * 10)) + 1;
+                    }
                     if (randomNumber != i) {
                         if (!block[(RowCnt * 7) + i].getStatus()) {
                             block[(RowCnt * 7) + i].init(i * screenX / 7, 0, blockHealth, (strength*5)+1);
@@ -329,10 +334,10 @@ public class QuaarelView extends SurfaceView implements Runnable{
                 }
                 if(boss.getStatus() && RectF.intersects(rock[i].getRect(), boss.getRect())){
                    if(!boss.getInvincible()) {
-                        boss.gotHit(strength);
                         powPow.init(rock[i].getX(), rock[i].getY() - (boss.getHeight()/4));
                         powEnd = score + 10;
                         bossHealthBar.gotHit(strength);
+                        boss.gotHit(strength);
                         soundManager.playHit();
                     }
                     rock[i].setInActive();
